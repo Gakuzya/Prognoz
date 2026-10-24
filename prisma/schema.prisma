@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // Supabase pooler (pgbouncer)
+  directUrl = env("DIRECT_URL") // прямое подключение для миграций
+}
+
+// ─────────── Компания: профиль бизнеса ───────────
+model Company {
+  id           String   @id @default(cuid())
+  userId       String   @unique // auth.users.id из Supabase Auth
+  name         String
+  industry     String?
+  currency     String   @default("USD")
+  avgCheck     Decimal  @db.Decimal(12, 2) // базовый средний чек
+  targetMargin Decimal  @db.Decimal(5, 2) // целевая маржинальность, %
+  ltv          Decimal  @db.Decimal(12, 2) // LTV клиента
+  settings     Json? // прочие настройки бизнеса
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  campaigns  Campaign[]
+  adChannels AdChannel[]
+  branches   Branch[]
+}
+
+// ─────────── Филиал компании ───────────
+model Branch {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String   // Название филиала или город
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  campaigns Campaign[]
+
+  @@unique([companyId, name])
+  @@index([companyId])
+}
+
+// ─────────── Кампания ───────────
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ARCHIVED
+}
+
+model Campaign {
+  id          String         @id @default(cuid())
+  companyId   String
+  branchId    String?        // привязка к конкретному филиалу (опционально)
+  name        String
+  totalBudget Decimal        @db.Decimal(14, 2)
+  startDate   DateTime
+  endDate     DateTime
+  status      CampaignStatus @default(DRAFT)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branch    Branch?    @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  forecasts Forecast[]
+
+  @@index([companyId, status])
+  @@index([branchId])
+}
+
+// ─────────── Канал трафика ───────────
+model AdChannel {
+  id             String   @id @default(cuid())
+  companyId      String
+  name           String // Google Ads, Meta, TikTok...
+  historicalCac  Decimal  @db.Decimal(12, 2) // исторический CAC
+  conversionRate Decimal  @db.Decimal(6, 4) // базовая конверсия: 0.0325 = 3.25%
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  company     Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  allocations ForecastAllocation[]
+
+  @@unique([companyId, name])
+}
+
+// ─────────── Прогноз ───────────
+model Forecast {
+  id              String   @id @default(cuid())
+  campaignId      String
+  predictedRoi    Decimal  @db.Decimal(8, 2) // общий ROI, %
+  expectedLeads   Int
+  expectedSales   Int? // ожидаемое количество продаж
+  expectedRevenue Decimal? @db.Decimal(14, 2) // ожидаемая выручка
+  aiSummary       String?  @db.Text // резюме от ИИ
+  createdAt       DateTime @default(now())
+
+  campaign    Campaign             @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  allocations ForecastAllocation[]
+
+  @@index([campaignId, createdAt])
+}
+
+// ─────────── M:N Forecast ↔ AdChannel ───────────
+model ForecastAllocation {
+  id              String  @id @default(cuid())
+  forecastId      String
+  adChannelId     String
+  allocatedBudget Decimal @db.Decimal(14, 2) // выделенные средства
+  expectedProfit  Decimal @db.Decimal(14, 2) // ожидаемая прибыль канала
+
+  forecast  Forecast  @relation(fields: [forecastId], references: [id], onDelete: Cascade)
+  adChannel AdChannel @relation(fields: [adChannelId], references: [id], onDelete: NoAction)
+
+  @@unique([forecastId, adChannelId])
+  @@index([adChannelId])
+}
