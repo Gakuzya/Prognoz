@@ -143,9 +143,18 @@ export default function HomePage() {
                     Оптимальный медиаплан: Кампания Q4
                   </h3>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-1 text-[11px] font-semibold text-indigo-300">
+                    Сбалансированный
+                  </span>
+                  <span className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-slate-400">
+                    Консервативный
+                  </span>
+                  <span className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-slate-400">
+                    Агрессивный
+                  </span>
                   <span className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
-                    Прогнозируемый ROI +224%
+                    ROI +224%
                   </span>
                 </div>
               </div>

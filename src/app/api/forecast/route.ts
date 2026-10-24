@@ -49,6 +49,8 @@ const engineSchema = z.object({
       expectedSales: z.number(),
       expectedRevenue: z.number(),
       expectedProfit: z.number(),
+      effectiveCac: z.number().optional(),
+      saturationPoint: z.number().optional(),
       reasoning: z.string(),
     })
   ),
@@ -58,6 +60,9 @@ const engineSchema = z.object({
   expectedRevenue: z.number(),
   expectedProfit: z.number(),
   predictedRoi: z.number(),
+  scenarios: z.record(z.string(), z.any()).optional(),
+  responseCurves: z.array(z.any()).optional(),
+  flightPlan: z.array(z.any()).optional(),
 });
 
 // ───────── POST /api/forecast ─────────
@@ -288,5 +293,8 @@ export async function POST(req: Request) {
       roi: result.predictedRoi,
     },
     allocations: result.allocations,
+    scenarios: result.scenarios,
+    responseCurves: result.responseCurves,
+    flightPlan: result.flightPlan,
   });
 }

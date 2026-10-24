@@ -47,7 +47,7 @@ const INDUSTRY_PRESETS = [
     channels: [
       { name: "Meta (Instagram / FB)", historicalCac: 19, conversionRate: 2.5 },
       { name: "Google Search Ads", historicalCac: 28, conversionRate: 3.2 },
-      { name: "TikTok Ads", historicalCac: 35, conversionRate: 1.5 },
+      { name: "Telegram Ads", historicalCac: 24, conversionRate: 2.1 },
     ],
   },
   {
@@ -57,9 +57,9 @@ const INDUSTRY_PRESETS = [
     margin: 35,
     ltv: 110,
     channels: [
-      { name: "Meta Shopping", historicalCac: 12, conversionRate: 3.8 },
-      { name: "Google Shopping (PMax)", historicalCac: 16, conversionRate: 3.0 },
-      { name: "VK Реклама", historicalCac: 18, conversionRate: 2.1 },
+      { name: "VK Реклама", historicalCac: 16, conversionRate: 2.8 },
+      { name: "Яндекс.Директ (Товарная галерея)", historicalCac: 18, conversionRate: 3.5 },
+      { name: "Google Shopping (PMax)", historicalCac: 15, conversionRate: 3.0 },
     ],
   },
   {
@@ -69,21 +69,45 @@ const INDUSTRY_PRESETS = [
     margin: 80,
     ltv: 1400,
     channels: [
-      { name: "Google Search Ads", historicalCac: 55, conversionRate: 4.0 },
-      { name: "LinkedIn Ads", historicalCac: 95, conversionRate: 2.8 },
-      { name: "Meta Lead Ads", historicalCac: 42, conversionRate: 2.0 },
+      { name: "Яндекс.Директ (Поиск B2B)", historicalCac: 55, conversionRate: 4.0 },
+      { name: "LinkedIn / VC Ads", historicalCac: 95, conversionRate: 2.8 },
+      { name: "Telegram Ads (Экспертные каналы)", historicalCac: 42, conversionRate: 2.4 },
     ],
   },
   {
     id: "services",
-    label: "Услуги / Недвижимость / Авто",
+    label: "Услуги / Авто / Недвижимость",
     avgCheck: 450,
     margin: 50,
     ltv: 1200,
     channels: [
-      { name: "Google Search Ads", historicalCac: 65, conversionRate: 3.5 },
-      { name: "Meta Direct / WhatsApp", historicalCac: 48, conversionRate: 2.2 },
+      { name: "Яндекс.Директ (Гео + Поиск)", historicalCac: 52, conversionRate: 3.8 },
+      { name: "Авито / Доски объявлений", historicalCac: 32, conversionRate: 4.2 },
       { name: "Telegram Ads", historicalCac: 38, conversionRate: 1.8 },
+    ],
+  },
+  {
+    id: "horeca",
+    label: "HoReCa / Рестораны & Доставка",
+    avgCheck: 28,
+    margin: 40,
+    ltv: 160,
+    channels: [
+      { name: "Яндекс.Карты & Гео-реклама", historicalCac: 9, conversionRate: 5.5 },
+      { name: "VK Реклама (Локальный радиус)", historicalCac: 12, conversionRate: 3.2 },
+      { name: "Telegram-каналы района", historicalCac: 14, conversionRate: 2.5 },
+    ],
+  },
+  {
+    id: "medtech",
+    label: "Медицина / Клиники / Стоматология",
+    avgCheck: 180,
+    margin: 55,
+    ltv: 720,
+    channels: [
+      { name: "Яндекс.Директ (Медицинский поиск)", historicalCac: 38, conversionRate: 4.5 },
+      { name: "Гео-сервисы (2GIS / Карты)", historicalCac: 22, conversionRate: 5.0 },
+      { name: "VK Таргетинг (Прогрев)", historicalCac: 29, conversionRate: 2.2 },
     ],
   },
 ];
@@ -441,19 +465,60 @@ export default function SimulatorClient({ company, branches = [] }: SimulatorCli
 
                 {/* Список каналов трафика */}
                 <div className="pt-2">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                      Каналы трафика ({channels.length})
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleAddChannel}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                      Добавить канал
-                    </button>
-                  </div>
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                        Каналы трафика ({channels.length})
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleAddChannel}
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        Добавить канал
+                      </button>
+                    </div>
+
+                    {/* Быстрые шаблоны каналов */}
+                    <div className="mb-3">
+                      <span className="text-[10px] text-slate-400 block mb-1.5">
+                        Быстрое добавление проверенных каналов:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          { name: "Яндекс.Директ", cac: 35, cr: 3.5 },
+                          { name: "Telegram Ads", cac: 22, cr: 2.2 },
+                          { name: "VK Реклама", cac: 24, cr: 2.4 },
+                          { name: "Авито / Карты", cac: 18, cr: 4.2 },
+                          { name: "Google Ads", cac: 38, cr: 3.0 },
+                          { name: "Meta Ads", cac: 25, cr: 2.5 },
+                        ].map((q) => {
+                          const isAlreadyAdded = channels.some(
+                            (c) => c.name.toLowerCase() === q.name.toLowerCase()
+                          );
+                          return (
+                            <button
+                              key={q.name}
+                              type="button"
+                              disabled={isAlreadyAdded}
+                              onClick={() => {
+                                setChannels([
+                                  ...channels,
+                                  { name: q.name, historicalCac: q.cac, conversionRate: q.cr },
+                                ]);
+                              }}
+                              className={`rounded-lg px-2 py-1 text-[11px] font-medium transition ${
+                                isAlreadyAdded
+                                  ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                                  : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 active:scale-95 border border-indigo-200/50"
+                              }`}
+                            >
+                              + {q.name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
 
                   <div className="space-y-2.5">
                     {channels.map((channel, idx) => (
