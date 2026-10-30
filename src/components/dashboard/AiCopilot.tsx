@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Bot,
   Sparkles,
@@ -72,7 +73,7 @@ export default function AiCopilot({ onApplyAdvice, customTip }: AiCopilotProps) 
             <p>{defaultText}</p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={handleApply}
@@ -92,13 +93,13 @@ export default function AiCopilot({ onApplyAdvice, customTip }: AiCopilotProps) 
               )}
             </button>
 
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="rounded-lg border border-slate-200 bg-white/60 px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:bg-white hover:text-slate-800 transition"
+            <Link
+              href="/dashboard/chat"
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-indigo-200 bg-white/80 px-2.5 py-1.5 text-xs font-semibold text-indigo-700 hover:bg-white hover:text-indigo-900 transition shadow-xs"
             >
-              Скрыть
-            </button>
+              <Bot className="h-3.5 w-3.5 text-indigo-600" />
+              <span>ИИ-Чат запуска</span>
+            </Link>
           </div>
         </div>
       )}

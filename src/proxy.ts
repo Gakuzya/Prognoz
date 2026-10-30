@@ -38,7 +38,8 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isApi = pathname.startsWith("/api");
+  const isPublicApi = pathname === "/api/chat";
+  const isApi = pathname.startsWith("/api") && !isPublicApi;
   const isProtected =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/onboarding") ||

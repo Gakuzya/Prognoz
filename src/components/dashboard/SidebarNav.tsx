@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { History, Settings, Sparkles, MapPin, type LucideIcon } from "lucide-react";
+import { History, Settings, Sparkles, MapPin, Bot, type LucideIcon } from "lucide-react";
 
 const items: { href: string; label: string; icon: LucideIcon; badge?: string }[] = [
   { href: "/dashboard", label: "Новый прогноз", icon: Sparkles },
+  { href: "/dashboard/chat", label: "ИИ-Консультант", icon: Bot, badge: "Multi-AI" },
   { href: "/dashboard/history", label: "История", icon: History },
   { href: "/dashboard/branches", label: "Филиалы", icon: MapPin },
   { href: "/dashboard/settings", label: "Настройки", icon: Settings },
