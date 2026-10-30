@@ -222,41 +222,49 @@ export async function POST(req: Request) {
 
     // 1. Попытка запроса через Groq API, если есть ключ
     if (groqKey && model !== "free-ai") {
-      try {
-        const groqModel = model.startsWith("llama") || model.startsWith("mixtral")
-          ? model
-          : "llama-3.3-70b-versatile";
+      const candidateModels = [
+        model && model !== "free-ai" ? model : "openai/gpt-oss-120b",
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-20b",
+        "qwen/qwen3.8-27b",
+        "llama-3.3-70b-versatile",
+      ];
+      // Убираем дубликаты
+      const uniqueModels = Array.from(new Set(candidateModels));
 
-        const groqRes = await fetch(GROQ_ENDPOINT, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${groqKey}`,
-          },
-          body: JSON.stringify({
-            model: groqModel,
-            messages: fullMessages,
-            temperature: 0.7,
-            max_tokens: 3500,
-          }),
-          signal: AbortSignal.timeout(25_000),
-        });
-
-        if (groqRes.ok) {
-          const groqData = await groqRes.json();
-          const text = groqData.choices?.[0]?.message?.content;
-          if (text) {
-            return NextResponse.json({
-              content: text,
-              provider: "groq",
+      for (const groqModel of uniqueModels) {
+        try {
+          const groqRes = await fetch(GROQ_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${groqKey}`,
+            },
+            body: JSON.stringify({
               model: groqModel,
-            });
+              messages: fullMessages,
+              temperature: 0.7,
+              max_tokens: 3500,
+            }),
+            signal: AbortSignal.timeout(25_000),
+          });
+
+          if (groqRes.ok) {
+            const groqData = await groqRes.json();
+            const text = groqData.choices?.[0]?.message?.content;
+            if (text) {
+              return NextResponse.json({
+                content: text,
+                provider: "groq",
+                model: groqModel,
+              });
+            }
+          } else {
+            console.warn(`[chat/api] Groq error on ${groqModel}:`, groqRes.status, await groqRes.text());
           }
-        } else {
-          console.warn("[chat/api] Groq error:", groqRes.status, await groqRes.text());
+        } catch (groqErr) {
+          console.warn(`[chat/api] Groq call failed for ${groqModel}:`, groqErr);
         }
-      } catch (groqErr) {
-        console.warn("[chat/api] Groq call failed, falling back to free provider:", groqErr);
       }
     }
 

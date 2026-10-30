@@ -164,9 +164,9 @@ export default function AiChatClient({ initialCompany }: AiChatClientProps) {
 
   const [selectedModel, setSelectedModel] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("adforecast_chat_model") || "llama-3.3-70b-versatile";
+      return localStorage.getItem("adforecast_chat_model") || "openai/gpt-oss-120b";
     }
-    return "llama-3.3-70b-versatile";
+    return "openai/gpt-oss-120b";
   });
 
   // Параметры проекта
@@ -694,14 +694,14 @@ export default function AiChatClient({ initialCompany }: AiChatClientProps) {
                   onChange={(e) => setSelectedModel(e.target.value)}
                   className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium outline-none focus:border-indigo-500"
                 >
-                  <option value="llama-3.3-70b-versatile">
-                    Llama 3.3 70B Versatile (Флагман, максимальный интеллект)
+                  <option value="openai/gpt-oss-120b">
+                    GPT-OSS 120B (Флагман Groq, максимальный интеллект)
                   </option>
-                  <option value="llama-3.1-8b-instant">
-                    Llama 3.1 8B Instant (Сверхбыстрая скорость ~800 токенов/сек)
+                  <option value="openai/gpt-oss-20b">
+                    GPT-OSS 20B (Сверхбыстрая скорость ~800 токенов/сек)
                   </option>
-                  <option value="mixtral-8x7b-32768">
-                    Mixtral 8x7B (Глубокий контекст)
+                  <option value="qwen/qwen3.8-27b">
+                    Qwen 3.8 27B (Alibaba Cloud)
                   </option>
                   <option value="free-ai">
                     Бесплатный режим (Без API-ключа)
