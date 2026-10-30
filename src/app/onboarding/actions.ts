@@ -41,3 +41,28 @@ export async function createCompany(
 
   redirect("/dashboard");
 }
+
+/** Создает базовый профиль по умолчанию и пропускает онбординг для пользователей без готового бизнеса */
+export async function skipOnboarding(): Promise<void> {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  await prisma.company.upsert({
+    where: { userId: user.id },
+    create: {
+      userId: user.id,
+      name: "Мой новый проект",
+      industry: "Новый бизнес",
+      currency: "KZT",
+      avgCheck: 25000,
+      targetMargin: 45,
+      ltv: 75000,
+    },
+    update: {},
+  });
+
+  redirect("/dashboard");
+}
