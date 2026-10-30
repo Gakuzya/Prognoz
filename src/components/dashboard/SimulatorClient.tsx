@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Sparkles,
   Plus,
@@ -13,6 +13,8 @@ import {
   Zap,
   Info,
   MapPin,
+  Bot,
+  MessageSquare,
 } from "lucide-react";
 import ResultsView from "./ResultsView";
 import AiCopilot from "./AiCopilot";
@@ -34,6 +36,15 @@ interface CompanyInitial {
 interface SimulatorClientProps {
   company: CompanyInitial;
   branches?: { id: string; name: string }[];
+  externalResult?: ForecastResult | null;
+  externalParams?: {
+    industry?: string;
+    totalBudget?: number;
+    avgCheck?: number;
+    channels?: ChannelInput[];
+  } | null;
+  onSwitchToChat?: () => void;
+  onClearProject?: () => void;
 }
 
 // Предустановленные шаблоны для сфер бизнеса в Казахстане (тенге, KZT)
@@ -118,7 +129,14 @@ const DEFAULT_CHANNELS: ChannelInput[] = [
   { name: "TikTok Ads (Казахстан)", historicalCac: 8200, conversionRate: 2.2 },
 ];
 
-export default function SimulatorClient({ company, branches = [] }: SimulatorClientProps) {
+export default function SimulatorClient({
+  company,
+  branches = [],
+  externalResult,
+  externalParams,
+  onSwitchToChat,
+  onClearProject,
+}: SimulatorClientProps) {
   // Режим работы: 'simple' (Упрощенный) или 'pro' (Профессиональный)
   const [mode, setMode] = useState<"simple" | "pro">("simple");
 
@@ -129,18 +147,43 @@ export default function SimulatorClient({ company, branches = [] }: SimulatorCli
   const [selectedIndustry, setSelectedIndustry] = useState<string>("services");
 
   // Параметры бюджета и юнит-экономики (в тенге)
-  const [totalBudget, setTotalBudget] = useState<number | string>(1000000);
-  const [avgCheck, setAvgCheck] = useState<number | string>(company.avgCheck || 250000);
+  const [totalBudget, setTotalBudget] = useState<number | string>(
+    externalParams?.totalBudget || 1000000
+  );
+  const [avgCheck, setAvgCheck] = useState<number | string>(
+    externalParams?.avgCheck || company.avgCheck || 250000
+  );
   const [targetMargin, setTargetMargin] = useState<number | string>(company.targetMargin || 50);
   const [ltv, setLtv] = useState<number | string>(company.ltv || 700000);
 
   // Каналы трафика
-  const [channels, setChannels] = useState<ChannelInput[]>(DEFAULT_CHANNELS);
+  const [channels, setChannels] = useState<ChannelInput[]>(
+    externalParams?.channels && externalParams.channels.length > 0
+      ? externalParams.channels
+      : DEFAULT_CHANNELS
+  );
 
   // Состояние запроса
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<ForecastResult | null>(null);
+  const [result, setResult] = useState<ForecastResult | null>(externalResult || null);
+
+  // Синхронизация при внешних изменениях
+  useEffect(() => {
+    if (externalResult !== undefined) {
+      setResult(externalResult);
+    }
+  }, [externalResult]);
+
+  useEffect(() => {
+    if (externalParams) {
+      if (externalParams.totalBudget) setTotalBudget(externalParams.totalBudget);
+      if (externalParams.avgCheck) setAvgCheck(externalParams.avgCheck);
+      if (externalParams.channels && externalParams.channels.length > 0) {
+        setChannels(externalParams.channels);
+      }
+    }
+  }, [externalParams]);
 
   // Переключение сферы в простом режиме
   const handleIndustryChange = (industryId: string) => {
@@ -640,17 +683,26 @@ export default function SimulatorClient({ company, branches = [] }: SimulatorCli
           ) : result ? (
             <ResultsView data={result} currency={company.currency} />
           ) : (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300/80 bg-white/60 p-12 text-center backdrop-blur-xs">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-                <BarChart3 className="h-6 w-6" />
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-indigo-200/80 bg-white/70 p-10 text-center shadow-sm backdrop-blur-sm">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-500/10 via-purple-500/10 to-transparent text-indigo-600 shadow-inner">
+                <Sparkles className="h-7 w-7 text-indigo-600 animate-pulse" />
               </div>
-              <h3 className="mt-4 text-base font-semibold text-slate-800">
-                Результаты прогнозирования
+              <h3 className="mt-4 text-base font-bold text-slate-900">
+                Интерактивные графики готовы к расчёту
               </h3>
-              <p className="mt-1 max-w-sm text-xs leading-relaxed text-slate-500">
-                Выберите режим и настройте параметры слева, затем нажмите{" "}
-                <span className="font-semibold text-indigo-600">«Сгенерировать прогноз»</span>, чтобы увидеть интерактивные графики и расчёт прибыли.
+              <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-slate-500">
+                Опишите ваш проект в ИИ-Штабе (он автоматически подберёт структуру каналов и бюджет) или настройте параметры вручную слева.
               </p>
+              {onSwitchToChat && (
+                <button
+                  type="button"
+                  onClick={onSwitchToChat}
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-indigo-500/20 transition hover:scale-105 active:scale-95"
+                >
+                  <Bot className="h-4 w-4" />
+                  <span>Перейти к диалогу с ИИ</span>
+                </button>
+              )}
             </div>
           )}
         </div>

@@ -1,9 +1,13 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { createSupabaseServerClient } from "@/lib/supabase";
-import SimulatorClient from "@/components/dashboard/SimulatorClient";
+import DashboardHub from "@/components/dashboard/DashboardHub";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ tab?: "chat" | "simulator" | "report" }>;
+}) {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -29,28 +33,26 @@ export default async function DashboardPage() {
     orderBy: { name: "asc" },
   });
 
-  return (
-    <div className="space-y-6">
-      {/* Заголовок страницы */}
-      <div>
-        <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
-          Симулятор рекламных бюджетов
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Смоделируйте оптимальное распределение бюджета по каналам на основе машинного обучения и формулы убывающей отдачи.
-        </p>
-      </div>
+  const params = searchParams ? await searchParams : undefined;
+  const initialTab =
+    params?.tab === "simulator"
+      ? "simulator"
+      : params?.tab === "report"
+      ? "report"
+      : "chat";
 
-      {/* Интерактивный симулятор (клиентский компонент) */}
-      <SimulatorClient
-        company={{
-          currency: company.currency,
-          avgCheck: Number(company.avgCheck),
-          targetMargin: Number(company.targetMargin),
-          ltv: Number(company.ltv),
-        }}
-        branches={branches}
-      />
-    </div>
+  return (
+    <DashboardHub
+      company={{
+        name: company.name,
+        industry: company.industry || undefined,
+        currency: company.currency,
+        avgCheck: Number(company.avgCheck),
+        targetMargin: Number(company.targetMargin),
+        ltv: Number(company.ltv),
+      }}
+      branches={branches}
+      initialTab={initialTab}
+    />
   );
 }

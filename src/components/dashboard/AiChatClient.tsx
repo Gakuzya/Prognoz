@@ -65,6 +65,10 @@ interface AiChatClientProps {
     industry?: string;
     currency?: string;
   };
+  onPlanGenerated?: (plan: StructuredPlanData) => void;
+  onOpenCharts?: (plan?: StructuredPlanData) => void;
+  onResetProject?: () => void;
+  activeProjectName?: string;
 }
 
 const TEMPLATES = [
@@ -134,7 +138,13 @@ function extractStructuredData(text: string): StructuredPlanData | null {
   return null;
 }
 
-export default function AiChatClient({ initialCompany }: AiChatClientProps) {
+export default function AiChatClient({
+  initialCompany,
+  onPlanGenerated,
+  onOpenCharts,
+  onResetProject,
+  activeProjectName,
+}: AiChatClientProps) {
   const [messages, setMessages] = useState<Message[]>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("adforecast_chat_history");
@@ -201,16 +211,17 @@ export default function AiChatClient({ initialCompany }: AiChatClientProps) {
   };
 
   const handleClearHistory = () => {
-    if (confirm("Очистить историю диалога?")) {
+    if (confirm("Очистить историю диалога и сбросить параметры проекта?")) {
       localStorage.removeItem("adforecast_chat_history");
       setMessages([
         {
           id: createMsgId("reset"),
           role: "assistant",
-          content: "Диалог очищен. О каком проекте вы хотите поговорить?",
+          content: "Диалог и проект очищены. О каком новом бизнесе или сфере вы хотите поговорить?",
           createdAt: new Date().toISOString(),
         },
       ]);
+      if (onResetProject) onResetProject();
     }
   };
 
@@ -257,6 +268,10 @@ export default function AiChatClient({ initialCompany }: AiChatClientProps) {
 
       const data = await res.json();
       const parsedData = extractStructuredData(data.content);
+
+      if (parsedData && onPlanGenerated) {
+        onPlanGenerated(parsedData);
+      }
 
       const assistantMsg: Message = {
         id: createMsgId("ai"),
@@ -544,14 +559,18 @@ export default function AiChatClient({ initialCompany }: AiChatClientProps) {
                   )}
 
                   {/* Кнопка перехода в симулятор с параметрами */}
-                  <div className="pt-1">
-                    <Link
-                      href="/dashboard"
-                      className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-indigo-500/20 transition hover:shadow-indigo-500/35 active:scale-95"
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={() => onOpenCharts ? onOpenCharts(msg.parsedData || undefined) : null}
+                      className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-95"
                     >
-                      <span>Открыть детальный медиаплан в симуляторе AdForecast</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
+                      <Sparkles className="h-4 w-4 text-amber-300 transition-transform group-hover:rotate-12" />
+                      <span>
+                        Открыть интерактивные графики {msg.parsedData.industry ? `(«${msg.parsedData.industry}»)` : "в симуляторе"}
+                      </span>
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                    </button>
                   </div>
                 </div>
               )}
@@ -622,7 +641,7 @@ export default function AiChatClient({ initialCompany }: AiChatClientProps) {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Например: Хочу открыть СТО / магазин в Инстаграм, бюджет 300 000 руб..."
+            placeholder="Например: Хочу открыть СТО в Астане, бюджет 5 млн ₸, на рекламу 600 тыс..."
             disabled={loading}
             className="flex-1 rounded-xl bg-transparent px-3 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400"
           />

@@ -36,13 +36,13 @@ export default function HomePage() {
 
           <nav className="hidden items-center gap-8 md:flex">
             <Link
-              href="/dashboard/chat"
+              href="/dashboard"
               className="flex items-center gap-1.5 text-sm font-semibold text-indigo-400 transition hover:text-indigo-300"
             >
               <Bot className="h-4 w-4" />
-              <span>ИИ-Консультант</span>
+              <span>ИИ-Штаб и Графики</span>
               <span className="rounded-full bg-indigo-500/20 px-1.5 py-0.2 text-[9px] font-bold text-indigo-300">
-                Groq AI
+                AI + MMM
               </span>
             </Link>
             <a
@@ -111,11 +111,11 @@ export default function HomePage() {
               </Link>
 
               <Link
-                href="/dashboard/chat"
+                href="/dashboard"
                 className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-indigo-500/30 bg-indigo-500/10 px-7 text-sm font-semibold text-indigo-300 backdrop-blur-md transition hover:bg-indigo-500/20 hover:text-white sm:w-auto"
               >
                 <Bot className="h-4 w-4 text-indigo-400" />
-                <span>ИИ-Чат запуска проекта</span>
+                <span>ИИ-Штаб запуска проекта</span>
               </Link>
             </div>
 
@@ -131,8 +131,41 @@ export default function HomePage() {
               </span>
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                Поддержка любого бизнеса
+                Поддержка любого бизнеса в РК
               </span>
+            </div>
+
+            {/* Как это работает: 3 простых шага */}
+            <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-3 text-left">
+              <div className="group rounded-2xl border border-white/10 bg-white/5 p-4.5 backdrop-blur-md transition hover:border-indigo-500/40 hover:bg-white/10">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 font-bold text-xs ring-1 ring-indigo-500/40">
+                  1
+                </span>
+                <h4 className="mt-3 text-sm font-bold text-white">Расскажите о проекте</h4>
+                <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+                  Напишите в чате ИИ: «Хочу открыть СТО в Астане, бюджет 5 млн ₸» или выберите готовую нишу.
+                </p>
+              </div>
+
+              <div className="group rounded-2xl border border-white/10 bg-white/5 p-4.5 backdrop-blur-md transition hover:border-purple-500/40 hover:bg-white/10">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400 font-bold text-xs ring-1 ring-purple-500/40">
+                  2
+                </span>
+                <h4 className="mt-3 text-sm font-bold text-white">ИИ строит стратегию</h4>
+                <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+                  ИИ рассчитывает CAC, каналы трафика (2GIS, Instagram Reels, TikTok) и окупаемость в тенге.
+                </p>
+              </div>
+
+              <div className="group rounded-2xl border border-white/10 bg-white/5 p-4.5 backdrop-blur-md transition hover:border-emerald-500/40 hover:bg-white/10">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 font-bold text-xs ring-1 ring-emerald-500/40">
+                  3
+                </span>
+                <h4 className="mt-3 text-sm font-bold text-white">Интерактивные графики</h4>
+                <p className="mt-1 text-xs text-slate-400 leading-relaxed">
+                  Графики мгновенно строятся именно по вашей нише с возможностью регулировки и экспорта в PDF.
+                </p>
+              </div>
             </div>
           </div>
 
