@@ -5,6 +5,8 @@ import { createSupabaseServerClient } from "@/lib/supabase";
 import CreateBranchModal from "@/components/dashboard/CreateBranchModal";
 import BranchCard from "@/components/dashboard/BranchCard";
 
+export const dynamic = "force-dynamic";
+
 export default async function BranchesPage() {
   const supabase = await createSupabaseServerClient();
   const {

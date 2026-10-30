@@ -5,6 +5,8 @@ import { createSupabaseServerClient } from "@/lib/supabase";
 import SidebarNav from "@/components/dashboard/SidebarNav";
 import { logout } from "../login/actions";
 
+export const dynamic = "force-dynamic";
+
 /**
  * Общий макет дашборда: боковая панель + шапка.
  * Серверный компонент: берёт пользователя из сессии Supabase и проверяет,

@@ -13,6 +13,8 @@ import { prisma } from "@/lib/prisma";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { formatMoney, formatNumber } from "@/components/dashboard/types";
 
+export const dynamic = "force-dynamic";
+
 export default async function HistoryPage() {
   const supabase = await createSupabaseServerClient();
   const {

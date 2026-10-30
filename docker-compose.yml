@@ -1,0 +1,22 @@
+services:
+  adforecast:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: adforecast:latest
+    container_name: adforecast-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - DATABASE_URL=${DATABASE_URL}
+      - DIRECT_URL=${DIRECT_URL}
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - AI_ENGINE_URL=http://127.0.0.1:8000
+    env_file:
+      - .env
