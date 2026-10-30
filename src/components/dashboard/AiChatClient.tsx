@@ -69,32 +69,32 @@ interface AiChatClientProps {
 
 const TEMPLATES = [
   {
-    title: "СТО / Автосервис",
+    title: "СТО / Автосервис в Алматы",
     icon: "🚗",
     prompt:
-      "Хочу открыть автосервис / СТО. Бюджет на открытие 800 000 руб, на рекламу 150 000 руб в месяц. Город 500k+ жителей. Распишите пошаговый запуск и рекламные каналы.",
-    context: { industry: "СТО / Автосервис", open: 800000, ad: 150000, currency: "RUB", loc: "Город 500k+" },
+      "Хочу открыть автосервис / СТО. Бюджет на открытие 5 000 000 ₸, на рекламу 600 000 ₸ в месяц. Город Алматы. Распишите пошаговый запуск и рекламные каналы (2GIS, Instagram Reels, Google.kz).",
+    context: { industry: "СТО / Автосервис", open: 5000000, ad: 600000, currency: "KZT", loc: "Алматы" },
   },
   {
-    title: "Instagram-магазин одежды",
+    title: "Instagram-магазин + Kaspi",
     icon: "👗",
     prompt:
-      "Планирую запустить Instagram-магазин женской одежды. Бюджет на закупку и запуск 250 000 руб, на рекламу 60 000 руб в месяц. С каких связок и блогеров начать?",
-    context: { industry: "Instagram-магазин", open: 250000, ad: 60000, currency: "RUB", loc: "Онлайн / РФ" },
+      "Планирую запустить Instagram-магазин женской одежды с продажами через Kaspi Магазин и доставкой по Казахстану. Бюджет на закупку 1 500 000 ₸, на рекламу 350 000 ₸ в месяц. С каких связок и блогеров начать?",
+    context: { industry: "Instagram-магазин", open: 1500000, ad: 350000, currency: "KZT", loc: "Казахстан" },
   },
   {
     title: "Кофейня формата To-Go",
     icon: "☕",
     prompt:
-      "Открываю небольшую кофейню to-go у метро. Бюджет на запуск 550 000 руб, на маркетинг и промо 70 000 руб. Как быстро привлечь первых 100 постоянных клиентов?",
-    context: { industry: "Кофейня / Общепит", open: 550000, ad: 70000, currency: "RUB", loc: "У метро" },
+      "Открываю небольшую кофейню to-go в бизнес-центре Астаны. Бюджет на запуск 3 500 000 ₸, на маркетинг и промо 400 000 ₸. Как быстро привлечь первых 150 постоянных гостей через 2GIS и Instagram?",
+    context: { industry: "Кофейня / Общепит", open: 3500000, ad: 400000, currency: "KZT", loc: "Астана" },
   },
   {
-    title: "B2B Услуги / Онлайн-школа",
+    title: "B2B / Онлайн-школа в РК",
     icon: "💻",
     prompt:
-      "Запуск онлайн-школы по IT-профессиям. Бюджет на рекламу 200 000 руб в месяц, средний чек курса 45 000 руб. Нужен медиаплан и расчет окупаемости.",
-    context: { industry: "Онлайн-школа / EdTech", open: 300000, ad: 200000, currency: "RUB", loc: "Онлайн" },
+      "Запуск онлайн-курсов в Казахстане. Бюджет на рекламу 800 000 ₸ в месяц, средний чек курса 180 000 ₸. Нужен медиаплан (Google.kz, Meta Ads, Telegram) и расчет окупаемости.",
+    context: { industry: "Онлайн-школа / EdTech", open: 1200000, ad: 800000, currency: "KZT", loc: "Казахстан" },
   },
 ];
 
@@ -107,14 +107,14 @@ function createMsgId(prefix = "msg") {
 const DEFAULT_WELCOME_MSG: Message = {
   id: "welcome",
   role: "assistant",
-  content: `👋 **Добро пожаловать в ИИ-Штаб запуска бизнеса и рекламы AdForecast!**
+  content: `👋 **Добро пожаловать в ИИ-Штаб запуска бизнеса и рекламы AdForecast (Казахстан)!**
 
 Я координирую команду из 3 специализированных ИИ-экспертов:
-1. 🏗️ **Бизнес-Стратег**: разработает пошаговый план открытия, УТП и формат позиционирования.
-2. 🎯 **Директор по трафику**: подберет самые окупаемые рекламные каналы под вашу сферу и рассчитает стоимость клиента (CAC).
-3. 💰 **Финансовый Контролер**: рассчитает точку безубыточности (Break-Even) и ожидаемую прибыль.
+1. 🏗️ **Бизнес-Стратег**: разработает пошаговый план открытия, УТП и формат позиционирования под рынок РК.
+2. 🎯 **Директор по трафику**: подберет самые окупаемые рекламные каналы в Казахстане (2GIS, Instagram Reels, TikTok Ads, Google.kz) и рассчитает стоимость клиента (CAC в тенге ₸).
+3. 💰 **Финансовый Контролер**: рассчитает точку безубыточности (Break-Even) и ожидаемую прибыль в ₸.
 
-Напишите вашу идею, например: **«Хочу открыть СТО с бюджетом 800 000 руб на открытие и 150 000 руб на рекламу»** или выберите один из готовых шаблонов ниже.`,
+Напишите вашу идею, например: **«Хочу открыть СТО в Алматы с бюджетом 5 000 000 ₸ на открытие и 600 000 ₸ на рекламу»** или выберите один из готовых шаблонов ниже.`,
   createdAt: "2026-01-01T00:00:00.000Z",
   provider: "AdForecast Multi-AI",
 };
@@ -172,10 +172,10 @@ export default function AiChatClient({ initialCompany }: AiChatClientProps) {
   // Параметры проекта
   const [context, setContext] = useState<ProjectContext>({
     industry: initialCompany?.industry || "СТО / Автосервис",
-    openingBudget: 800000,
-    adBudget: 150000,
-    currency: initialCompany?.currency || "RUB",
-    location: "Москва",
+    openingBudget: 5000000,
+    adBudget: 600000,
+    currency: initialCompany?.currency || "KZT",
+    location: "Алматы, Казахстан",
   });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -423,10 +423,10 @@ export default function AiChatClient({ initialCompany }: AiChatClientProps) {
                 onChange={(e) => setContext({ ...context, currency: e.target.value })}
                 className="w-full rounded-xl border border-slate-200 bg-white px-3 py-1.5 font-semibold text-slate-900 outline-none focus:border-indigo-500"
               >
-                <option value="RUB">RUB (₽)</option>
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="KZT">KZT (₸)</option>
+                <option value="KZT">KZT (₸) — Казахстанский тенге</option>
+                <option value="USD">USD ($) — Доллар США</option>
+                <option value="RUB">RUB (₽) — Российский рубль</option>
+                <option value="EUR">EUR (€) — Евро</option>
               </select>
             </div>
           </div>

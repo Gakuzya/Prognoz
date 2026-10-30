@@ -14,7 +14,7 @@ model Company {
   userId       String   @unique // auth.users.id из Supabase Auth
   name         String
   industry     String?
-  currency     String   @default("USD")
+  currency     String   @default("KZT")
   avgCheck     Decimal  @db.Decimal(12, 2) // базовый средний чек
   targetMargin Decimal  @db.Decimal(5, 2) // целевая маржинальность, %
   ltv          Decimal  @db.Decimal(12, 2) // LTV клиента

@@ -40,7 +40,7 @@ export default async function SettingsPage() {
         <div className="mt-4 grid grid-cols-2 gap-4 text-xs">
           <div className="rounded-lg bg-slate-50 p-3">
             <span className="text-slate-400">Валюта расчетов</span>
-            <p className="mt-1 font-semibold text-slate-800">{company?.currency || "USD"}</p>
+            <p className="mt-1 font-semibold text-slate-800">{company?.currency || "KZT"}</p>
           </div>
           <div className="rounded-lg bg-slate-50 p-3">
             <span className="text-slate-400">Базовый средний чек</span>

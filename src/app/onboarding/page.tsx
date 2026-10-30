@@ -33,10 +33,11 @@ export default function OnboardingPage() {
           </Field>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Валюта">
-              <select name="currency" defaultValue="USD" className={input}>
-                {["USD", "EUR", "KZT", "RUB"].map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
+              <select name="currency" defaultValue="KZT" className={input}>
+                <option value="KZT">KZT (₸) — Казахстанский тенге</option>
+                <option value="USD">USD ($) — Доллар США</option>
+                <option value="RUB">RUB (₽) — Российский рубль</option>
+                <option value="EUR">EUR (€) — Евро</option>
               </select>
             </Field>
             <Field label="Средний чек">

@@ -169,19 +169,19 @@ export default function HomePage() {
               <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <span className="text-xs text-slate-400">Бюджет</span>
-                  <p className="mt-1 text-xl font-bold text-white">$10,000</p>
+                  <p className="mt-1 text-xl font-bold text-white">5 000 000 ₸</p>
                   <span className="text-[11px] text-slate-500">3 канала трафика</span>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <span className="text-xs text-slate-400">Ожидаемая выручка</span>
-                  <p className="mt-1 text-xl font-bold text-indigo-400">$80,990</p>
+                  <p className="mt-1 text-xl font-bold text-indigo-400">40 495 000 ₸</p>
                   <span className="text-[11px] text-emerald-400">+18% к базовой</span>
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                   <span className="text-xs text-slate-400">Чистая прибыль</span>
-                  <p className="mt-1 text-xl font-bold text-emerald-400">$22,396</p>
+                  <p className="mt-1 text-xl font-bold text-emerald-400">11 198 000 ₸</p>
                   <span className="text-[11px] text-slate-500">После вычета рекламы</span>
                 </div>
 
@@ -195,26 +195,26 @@ export default function HomePage() {
               {/* Мини-распределение каналов */}
               <div className="mt-6 rounded-xl border border-white/10 bg-slate-950/60 p-4">
                 <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
-                  <span>Рекомендованное распределение бюджета</span>
+                  <span>Рекомендованное распределение бюджета (Казахстан)</span>
                   <span className="text-indigo-400 font-semibold">ИИ Copilot подтвердил</span>
                 </div>
                 <div className="flex h-3 w-full overflow-hidden rounded-full bg-slate-800">
-                  <div className="h-full bg-indigo-500" style={{ width: "51.25%" }} title="Meta 51%" />
-                  <div className="h-full bg-cyan-400" style={{ width: "34.25%" }} title="Google Ads 34%" />
+                  <div className="h-full bg-indigo-500" style={{ width: "51.25%" }} title="Instagram 51%" />
+                  <div className="h-full bg-cyan-400" style={{ width: "34.25%" }} title="2GIS 34%" />
                   <div className="h-full bg-pink-500" style={{ width: "14.5%" }} title="TikTok 15%" />
                 </div>
                 <div className="mt-3 flex flex-wrap gap-4 text-xs">
                   <span className="flex items-center gap-1.5 text-slate-300">
                     <span className="h-2 w-2 rounded-full bg-indigo-500" />
-                    Meta Ads: 51.2% ($5,125)
+                    Instagram Reels: 51.2% (2 560 000 ₸)
                   </span>
                   <span className="flex items-center gap-1.5 text-slate-300">
                     <span className="h-2 w-2 rounded-full bg-cyan-400" />
-                    Google Ads: 34.3% ($3,425)
+                    2GIS (РК): 34.3% (1 715 000 ₸)
                   </span>
                   <span className="flex items-center gap-1.5 text-slate-300">
                     <span className="h-2 w-2 rounded-full bg-pink-500" />
-                    TikTok Ads: 14.5% ($1,450)
+                    TikTok Ads: 14.5% (725 000 ₸)
                   </span>
                 </div>
               </div>
@@ -246,7 +246,7 @@ export default function HomePage() {
               </div>
               <h3 className="mt-4 text-base font-bold text-white">Собственный ML-движок</h3>
               <p className="mt-2 text-xs leading-relaxed text-slate-400">
-                Модель на базе закона убывающей отдачи. Вычисляет точку насыщения каждого источника трафика, чтобы ни один доллар не тратился впустую.
+                Модель на базе закона убывающей отдачи. Вычисляет точку насыщения каждого источника трафика, чтобы ни один тенге не тратился впустую.
               </p>
             </div>
 

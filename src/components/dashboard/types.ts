@@ -69,9 +69,9 @@ export type ForecastResult = {
   flightPlan?: FlightPlanWeek[];
 };
 
-/** Форматирование денег в валюте компании */
-export function formatMoney(value: number, currency = "USD") {
-  return new Intl.NumberFormat("ru-RU", {
+/** Форматирование денег в валюте компании (по умолчанию казахстанский тенге ₸) */
+export function formatMoney(value: number, currency = "KZT") {
+  return new Intl.NumberFormat("ru-KZ", {
     style: "currency",
     currency,
     maximumFractionDigits: 0,
@@ -79,5 +79,5 @@ export function formatMoney(value: number, currency = "USD") {
 }
 
 export function formatNumber(value: number) {
-  return new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(value);
+  return new Intl.NumberFormat("ru-KZ", { maximumFractionDigits: 0 }).format(value);
 }

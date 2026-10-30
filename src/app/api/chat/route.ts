@@ -35,52 +35,59 @@ function buildSystemPrompt(context?: ProjectContext) {
     contextSnippet = `
 ДАННЫЕ О ПРОЕКТЕ ПОЛЬЗОВАТЕЛЯ:
 - Сфера / Ниша: ${context.industry || "Не указана (определи из запроса)"}
-- Бюджет на открытие (CAPEX): ${context.openingBudget ? `${context.openingBudget} ${context.currency || "USD"}` : "Не указан"}
-- Бюджет на маркетинг/рекламу в месяц: ${context.adBudget ? `${context.adBudget} ${context.currency || "USD"}` : "Не указан"}
-- Локация / Город: ${context.location || "Не указана"}
-- Валюта: ${context.currency || "USD"}
+- Бюджет на открытие (CAPEX): ${context.openingBudget ? `${context.openingBudget} ${context.currency || "KZT"}` : "Не указан"}
+- Бюджет на маркетинг/рекламу в месяц: ${context.adBudget ? `${context.adBudget} ${context.currency || "KZT"}` : "Не указан"}
+- Локация / Город: ${context.location || "Казахстан (Алматы, Астана, Шымкент и др.)"}
+- Валюта: ${context.currency || "KZT"}
 `;
   }
 
-  return `Ты — мультиагентная ИИ-система стратегического планирования бизнеса и рекламы платформы AdForecast.
+  return `Ты — мультиагентная ИИ-система стратегического планирования бизнеса и рекламы платформы AdForecast для рынка Казахстана и Центральной Азии.
+Основная расчетная валюта платформы — Казахстанский тенге (KZT, ₸). Все бюджеты, средние чеки, CPL, CAC, выручку и прибыль рассчитывай и указывай в ТЕНГЕ (₸, KZT), если пользователь явно не указал иную валюту.
+Учитывай специфику рынка Казахстана:
+- Ведущие каналы: Instagram Ads (Reels / Meta) — канал №1 по охвату и вовлечению в РК; 2GIS (критически важен для локального бизнеса в Алматы, Астане, Шымкенте); TikTok Ads РК (высокая динамика); Google.kz (поиск с высоким чеком); продажи и дожим через Kaspi Магазин и WhatsApp Business.
+
 В твоем составе работают 3 виртуальных эксперта высокой квалификации:
 
 1. 🏗️ **Бизнес-Стратег (Business Architect)**:
-   - Разрабатывает концепцию запуска, УТП (уникальное торговое предложение) и позиционирование.
-   - Определяет, какую площадку готовить в первую очередь (Instagram-аккаунт, сайт/квиз, профиль на картах, Telegram).
+   - Разрабатывает концепцию запуска, УТП (уникальное торговое предложение) и позиционирование под рынок РК.
+   - Определяет, какую площадку готовить в первую очередь (Instagram-аккаунт, профиль в 2GIS, витрина в Kaspi, сайт/квиз, WhatsApp-воронка).
    - Формирует пошаговый план открытия бизнеса по неделям (Roadmap недели 1-4).
 
 2. 🎯 **Медиапланер & Директор по трафику (Ad Media Strategist)**:
-   - Рассчитывает оптимальное распределение рекламного бюджета по конкретным каналам (Instagram/Meta, Яндекс.Директ, Telegram Ads/Посевы, VK, Карты 2GIS/Яндекс, Авито, Блогеры).
-   - Оценивает реалистичный CPL (цена лида), конверсию в покупку и CAC (стоимость привлечения клиента).
+   - Рассчитывает оптимальное распределение рекламного бюджета по ключевым каналам Казахстана (Instagram Reels/Stories, 2GIS, TikTok Ads, Google.kz, WhatsApp/Telegram).
+   - Оценивает реалистичный CPL (цена лида в тенге ₸), конверсию в покупку и CAC (стоимость привлечения клиента в тенге ₸).
    - Предлагает конкретные офферы и рекламные креативы для первого запуска.
 
 3. 💰 **Финансовый Контролер & Юнит-экономика (Financial Controller)**:
    - Считает точку безубыточности (Break-Even): сколько продаж нужно делать в день/месяц для выхода в ноль.
-   - Оценивает ожидаемую выручку, чистую прибыль и прогнозируемый ROI рекламных вложений.
-   - Указывает ключевые финансовые риски и способы их избежать.
+   - Оценивает ожидаемую выручку в тенге ₸, чистую прибыль и прогнозируемый ROI рекламных вложений.
+   - Указывает ключевые финансовые риски и способы их избежать на рынке Казахстана.
 
 ${contextSnippet}
 
 ПРАВИЛА ОТВЕТА:
 - Пиши четко, структурированно, профессионально и по делу, на русском языке.
+- Все суммы по умолчанию приводи в тенге (₸).
 - Используй Markdown заголовки, списки, выделения.
 - В конце ответа ВСЕГДА добавь скрытый или явный JSON-блок данных в формате:
 \`\`\`json:adforecast_data
 {
   "industry": "Название сферы",
-  "openingBudget": 0,
-  "adBudget": 0,
-  "currency": "USD или RUB",
-  "breakEvenSales": 0,
-  "estimatedRevenue": 0,
-  "estimatedProfit": 0,
-  "estimatedRoi": 0,
+  "openingBudget": 5000000,
+  "adBudget": 600000,
+  "currency": "KZT",
+  "breakEvenSales": 35,
+  "estimatedRevenue": 3850000,
+  "estimatedProfit": 1100000,
+  "estimatedRoi": 183,
   "channelAllocations": [
-    { "channel": "Название канала", "sharePct": 40, "budget": 4000, "estimatedCac": 25, "expectedSales": 160 }
+    { "channel": "Instagram Ads (Reels / Meta)", "sharePct": 45, "budget": 270000, "estimatedCac": 8500, "expectedSales": 32 },
+    { "channel": "2GIS (Казахстан)", "sharePct": 35, "budget": 210000, "estimatedCac": 6500, "expectedSales": 32 },
+    { "channel": "TikTok Ads (Казахстан)", "sharePct": 20, "budget": 120000, "estimatedCac": 7200, "expectedSales": 17 }
   ],
   "actionChecklist": [
-    { "task": "Действие 1", "phase": "Неделя 1" }
+    { "task": "Оформить Instagram и карточку в 2GIS с акцией для новых клиентов", "phase": "Неделя 1" }
   ]
 }
 \`\`\`
@@ -91,10 +98,18 @@ ${contextSnippet}
  * Локальный генератор стратегии на случай отсутствия связи с внешними API
  */
 function generateLocalStrategy(userPrompt: string, context?: ProjectContext) {
-  const currency = context?.currency || "RUB";
-  const adBudget = context?.adBudget || 100000;
-  const openBudget = context?.openingBudget || 500000;
-  const industry = context?.industry || (userPrompt.toLowerCase().includes("сто") ? "Автосервис / СТО" : (userPrompt.toLowerCase().includes("инстаграм") || userPrompt.toLowerCase().includes("одежд") ? "Instagram-магазин" : "Малый бизнес"));
+  const currency = context?.currency || "KZT";
+  const adBudget = context?.adBudget || 600000;
+  const openBudget = context?.openingBudget || 5000000;
+  const industry =
+    context?.industry ||
+    (userPrompt.toLowerCase().includes("сто")
+      ? "Автосервис / СТО"
+      : userPrompt.toLowerCase().includes("инстаграм") ||
+        userPrompt.toLowerCase().includes("одежд") ||
+        userPrompt.toLowerCase().includes("kaspi")
+      ? "Instagram-магазин / Kaspi"
+      : "Малый бизнес в РК");
 
   const ch1Share = 45;
   const ch2Share = 35;
@@ -104,20 +119,31 @@ function generateLocalStrategy(userPrompt: string, context?: ProjectContext) {
   const ch2Budget = Math.round(adBudget * (ch2Share / 100));
   const ch3Budget = Math.round(adBudget * (ch3Share / 100));
 
-  let ch1Name = "Яндекс.Директ (Поиск + Мастер Кампаний)";
-  let ch2Name = "Яндекс.Карты & 2GIS (Приоритетное размещение)";
-  let ch3Name = "Telegram-каналы (Локальные посевы)";
-  let cac1 = 35;
-  let cac2 = 20;
-  let cac3 = 28;
+  let ch1Name = "Instagram Ads (Reels / Meta)";
+  let ch2Name = "2GIS (Алматы / Астана / Шымкент)";
+  let ch3Name = "TikTok Ads (Казахстан)";
+  let cac1 = 8500;
+  let cac2 = 6500;
+  let cac3 = 7200;
 
-  if (industry.toLowerCase().includes("инстаграм") || industry.toLowerCase().includes("магазин")) {
+  if (
+    industry.toLowerCase().includes("инстаграм") ||
+    industry.toLowerCase().includes("магазин") ||
+    industry.toLowerCase().includes("kaspi")
+  ) {
     ch1Name = "Instagram Reels & Таргетированная реклама";
-    ch2Name = "Микро-инфлюенсеры (Блогеры по бартеру и фиксу)";
-    ch3Name = "VK Реклама (Каталог товаров)";
-    cac1 = 15;
-    cac2 = 22;
-    cac3 = 18;
+    ch2Name = "Kaspi Магазин & Продвижение витрины";
+    ch3Name = "TikTok Ads & Локальные блогеры Алматы/Астаны";
+    cac1 = 4500;
+    cac2 = 3200;
+    cac3 = 4800;
+  } else if (industry.toLowerCase().includes("b2b") || industry.toLowerCase().includes("онлайн-школ")) {
+    ch1Name = "Google.kz (Поисковая реклама)";
+    ch2Name = "Meta Ads (Лид-формы Instagram / Facebook)";
+    ch3Name = "WhatsApp / Telegram (Прямой маркетинг)";
+    cac1 = 16000;
+    cac2 = 12000;
+    cac3 = 8500;
   }
 
   const sales1 = Math.round(ch1Budget / Math.max(cac1, 1));
@@ -125,7 +151,13 @@ function generateLocalStrategy(userPrompt: string, context?: ProjectContext) {
   const sales3 = Math.round(ch3Budget / Math.max(cac3, 1));
   const totalSales = sales1 + sales2 + sales3;
 
-  const avgCheck = industry.includes("СТО") ? 4500 : (industry.includes("магазин") ? 3200 : 2500);
+  const avgCheck = industry.includes("СТО")
+    ? 35000
+    : industry.includes("магазин")
+    ? 18000
+    : industry.includes("b2b") || industry.includes("онлайн-школ")
+    ? 120000
+    : 22000;
   const revenue = totalSales * avgCheck;
   const marginPct = 45;
   const profit = Math.round((revenue * marginPct) / 100) - adBudget;
@@ -135,7 +167,7 @@ function generateLocalStrategy(userPrompt: string, context?: ProjectContext) {
   return `### 🏗️ Агент 1: Бизнес-Стратег (Архитектура запуска)
 
 **Сфера:** ${industry}  
-**Инвестиционный план:** ${openBudget.toLocaleString("ru-RU")} ${currency} на запуск, ${adBudget.toLocaleString("ru-RU")} ${currency} на маркетинг.
+**Инвестиционный план:** ${openBudget.toLocaleString("ru-KZ")} ${currency} на запуск, ${adBudget.toLocaleString("ru-KZ")} ${currency} на маркетинг.
 
 1. **Позиционирование и УТП**:
    - Четкая специализация и отстройка от конкурентов: скорость выполнения, прозрачные цены и гарантия качества.
@@ -153,15 +185,15 @@ function generateLocalStrategy(userPrompt: string, context?: ProjectContext) {
 
 ### 🎯 Агент 2: Медиапланер & Директор по трафику
 
-Рекомендованный медиамикс на рекламный бюджет **${adBudget.toLocaleString("ru-RU")} ${currency}**:
+Рекомендованный медиамикс на рекламный бюджет **${adBudget.toLocaleString("ru-KZ")} ${currency}**:
 
-1. **${ch1Name}** — **${ch1Share}% (${ch1Budget.toLocaleString("ru-RU")} ${currency})**
+1. **${ch1Name}** — **${ch1Share}% (${ch1Budget.toLocaleString("ru-KZ")} ${currency})**
    - *Роль*: Горячий спрос пользователей, которые ищут прямо сейчас.
    - *Прогноз*: CAC ≈ ${cac1} ${currency}, ожидаемый объем: ~${sales1} клиентов.
-2. **${ch2Name}** — **${ch2Share}% (${ch2Budget.toLocaleString("ru-RU")} ${currency})**
+2. **${ch2Name}** — **${ch2Share}% (${ch2Budget.toLocaleString("ru-KZ")} ${currency})**
    - *Роль*: Локальный и визуальный трафик, доверие и узнаваемость бренда.
    - *Прогноз*: CAC ≈ ${cac2} ${currency}, ожидаемый объем: ~${sales2} клиентов.
-3. **${ch3Name}** — **${ch3Share}% (${ch3Budget.toLocaleString("ru-RU")} ${currency})**
+3. **${ch3Name}** — **${ch3Share}% (${ch3Budget.toLocaleString("ru-KZ")} ${currency})**
    - *Роль*: Дополнительный охват и дожим сомневающейся аудитории.
    - *Прогноз*: CAC ≈ ${cac3} ${currency}, ожидаемый объем: ~${sales3} клиентов.
 
@@ -171,8 +203,8 @@ function generateLocalStrategy(userPrompt: string, context?: ProjectContext) {
 
 - **Точка безубыточности (Break-Even)**: **${breakEven} клиентов/заказов** в месяц для полного покрытия маркетинговых вложений.
 - **Прогнозируемый объем продаж**: **~${totalSales} заказов/клиентов** в месяц.
-- **Ожидаемая выручка**: **${revenue.toLocaleString("ru-RU")} ${currency}**.
-- **Чистая операционная прибыль после вычета рекламы**: **${profit.toLocaleString("ru-RU")} ${currency}**.
+- **Ожидаемая выручка**: **${revenue.toLocaleString("ru-KZ")} ${currency}**.
+- **Чистая операционная прибыль после вычета рекламы**: **${profit.toLocaleString("ru-KZ")} ${currency}**.
 - **Прогнозируемый ROI маркетинга**: **+${roi}%**.
 
 **Рекомендации по снижению рисков:**

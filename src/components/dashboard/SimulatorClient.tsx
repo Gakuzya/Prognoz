@@ -36,86 +36,86 @@ interface SimulatorClientProps {
   branches?: { id: string; name: string }[];
 }
 
-// Предустановленные шаблоны для сфер бизнеса в Упрощенном режиме
+// Предустановленные шаблоны для сфер бизнеса в Казахстане (тенге, KZT)
 const INDUSTRY_PRESETS = [
   {
     id: "edtech",
-    label: "Онлайн-школы / EdTech",
-    avgCheck: 120,
-    margin: 45,
-    ltv: 280,
+    label: "Онлайн-школы / EdTech (Казахстан)",
+    avgCheck: 65000,
+    margin: 50,
+    ltv: 180000,
     channels: [
-      { name: "Meta (Instagram / FB)", historicalCac: 19, conversionRate: 2.5 },
-      { name: "Google Search Ads", historicalCac: 28, conversionRate: 3.2 },
-      { name: "Telegram Ads", historicalCac: 24, conversionRate: 2.1 },
+      { name: "Instagram Ads (Reels / Meta)", historicalCac: 9500, conversionRate: 2.8 },
+      { name: "TikTok Ads (Казахстан)", historicalCac: 8200, conversionRate: 2.2 },
+      { name: "Google Search (Google.kz)", historicalCac: 14000, conversionRate: 3.5 },
     ],
   },
   {
     id: "ecommerce",
-    label: "E-commerce / Ритейл",
-    avgCheck: 45,
+    label: "E-commerce / Ритейл & Kaspi",
+    avgCheck: 22000,
     margin: 35,
-    ltv: 110,
+    ltv: 65000,
     channels: [
-      { name: "VK Реклама", historicalCac: 16, conversionRate: 2.8 },
-      { name: "Яндекс.Директ (Товарная галерея)", historicalCac: 18, conversionRate: 3.5 },
-      { name: "Google Shopping (PMax)", historicalCac: 15, conversionRate: 3.0 },
+      { name: "Instagram Shopping / Каталог", historicalCac: 4800, conversionRate: 3.6 },
+      { name: "TikTok Ads (Казахстан)", historicalCac: 4200, conversionRate: 2.9 },
+      { name: "Google Shopping / Поиск", historicalCac: 5500, conversionRate: 3.2 },
     ],
   },
   {
     id: "b2b_saas",
-    label: "B2B SaaS / IT-продукты",
-    avgCheck: 350,
+    label: "B2B SaaS / IT-услуги РК",
+    avgCheck: 180000,
     margin: 80,
-    ltv: 1400,
+    ltv: 850000,
     channels: [
-      { name: "Яндекс.Директ (Поиск B2B)", historicalCac: 55, conversionRate: 4.0 },
-      { name: "LinkedIn / VC Ads", historicalCac: 95, conversionRate: 2.8 },
-      { name: "Telegram Ads (Экспертные каналы)", historicalCac: 42, conversionRate: 2.4 },
+      { name: "Google Search Ads (B2B Казахстан)", historicalCac: 32000, conversionRate: 4.0 },
+      { name: "Meta / Instagram Lead Ads", historicalCac: 24000, conversionRate: 2.5 },
+      { name: "Telegram / Бизнес-сообщества", historicalCac: 28000, conversionRate: 2.2 },
     ],
   },
   {
     id: "services",
-    label: "Услуги / Авто / Недвижимость",
-    avgCheck: 450,
+    label: "СТО / Услуги / Недвижимость",
+    avgCheck: 250000,
     margin: 50,
-    ltv: 1200,
+    ltv: 700000,
     channels: [
-      { name: "Яндекс.Директ (Гео + Поиск)", historicalCac: 52, conversionRate: 3.8 },
-      { name: "Авито / Доски объявлений", historicalCac: 32, conversionRate: 4.2 },
-      { name: "Telegram Ads", historicalCac: 38, conversionRate: 1.8 },
+      { name: "2GIS (Алматы / Астана / Шымкент)", historicalCac: 18000, conversionRate: 4.5 },
+      { name: "Instagram Direct / WhatsApp", historicalCac: 19000, conversionRate: 3.2 },
+      { name: "Google Search (Горячий спрос)", historicalCac: 26000, conversionRate: 3.8 },
     ],
   },
   {
     id: "horeca",
     label: "HoReCa / Рестораны & Доставка",
-    avgCheck: 28,
+    avgCheck: 14000,
     margin: 40,
-    ltv: 160,
+    ltv: 90000,
     channels: [
-      { name: "Яндекс.Карты & Гео-реклама", historicalCac: 9, conversionRate: 5.5 },
-      { name: "VK Реклама (Локальный радиус)", historicalCac: 12, conversionRate: 3.2 },
-      { name: "Telegram-каналы района", historicalCac: 14, conversionRate: 2.5 },
+      { name: "2GIS & Яндекс.Карты (Гео Казахстан)", historicalCac: 3200, conversionRate: 6.0 },
+      { name: "Instagram Stories / Reels (Локально)", historicalCac: 4500, conversionRate: 3.5 },
+      { name: "TikTok фуд-блогеры / обзоры", historicalCac: 3800, conversionRate: 4.0 },
     ],
   },
   {
     id: "medtech",
     label: "Медицина / Клиники / Стоматология",
-    avgCheck: 180,
+    avgCheck: 85000,
     margin: 55,
-    ltv: 720,
+    ltv: 380000,
     channels: [
-      { name: "Яндекс.Директ (Медицинский поиск)", historicalCac: 38, conversionRate: 4.5 },
-      { name: "Гео-сервисы (2GIS / Карты)", historicalCac: 22, conversionRate: 5.0 },
-      { name: "VK Таргетинг (Прогрев)", historicalCac: 29, conversionRate: 2.2 },
+      { name: "2GIS (Медицина / Стоматология)", historicalCac: 12000, conversionRate: 5.2 },
+      { name: "Google Search (Запись к врачу)", historicalCac: 18000, conversionRate: 4.2 },
+      { name: "Instagram (Узнаваемость клиники)", historicalCac: 14000, conversionRate: 2.8 },
     ],
   },
 ];
 
 const DEFAULT_CHANNELS: ChannelInput[] = [
-  { name: "Google Search Ads", historicalCac: 28, conversionRate: 3.5 },
-  { name: "Meta (Facebook / Insta)", historicalCac: 19, conversionRate: 2.2 },
-  { name: "TikTok Ads", historicalCac: 38, conversionRate: 1.4 },
+  { name: "Instagram Ads (Reels / Meta)", historicalCac: 9500, conversionRate: 2.8 },
+  { name: "2GIS (Казахстан)", historicalCac: 7500, conversionRate: 4.5 },
+  { name: "TikTok Ads (Казахстан)", historicalCac: 8200, conversionRate: 2.2 },
 ];
 
 export default function SimulatorClient({ company, branches = [] }: SimulatorClientProps) {
@@ -126,13 +126,13 @@ export default function SimulatorClient({ company, branches = [] }: SimulatorCli
   const [selectedBranchId, setSelectedBranchId] = useState<string>("");
 
   // Параметры для простого режима
-  const [selectedIndustry, setSelectedIndustry] = useState<string>("edtech");
+  const [selectedIndustry, setSelectedIndustry] = useState<string>("services");
 
-  // Параметры бюджета и юнит-экономики
-  const [totalBudget, setTotalBudget] = useState<number | string>(10000);
-  const [avgCheck, setAvgCheck] = useState<number | string>(company.avgCheck || 120);
-  const [targetMargin, setTargetMargin] = useState<number | string>(company.targetMargin || 40);
-  const [ltv, setLtv] = useState<number | string>(company.ltv || 300);
+  // Параметры бюджета и юнит-экономики (в тенге)
+  const [totalBudget, setTotalBudget] = useState<number | string>(1000000);
+  const [avgCheck, setAvgCheck] = useState<number | string>(company.avgCheck || 250000);
+  const [targetMargin, setTargetMargin] = useState<number | string>(company.targetMargin || 50);
+  const [ltv, setLtv] = useState<number | string>(company.ltv || 700000);
 
   // Каналы трафика
   const [channels, setChannels] = useState<ChannelInput[]>(DEFAULT_CHANNELS);
@@ -158,7 +158,7 @@ export default function SimulatorClient({ company, branches = [] }: SimulatorCli
   const handleAddChannel = () => {
     setChannels([
       ...channels,
-      { name: `Новый канал ${channels.length + 1}`, historicalCac: 30, conversionRate: 2.0 },
+      { name: `Новый канал ${channels.length + 1}`, historicalCac: 7500, conversionRate: 2.5 },
     ]);
   };
 
@@ -486,12 +486,12 @@ export default function SimulatorClient({ company, branches = [] }: SimulatorCli
                       </span>
                       <div className="flex flex-wrap gap-1.5">
                         {[
-                          { name: "Яндекс.Директ", cac: 35, cr: 3.5 },
-                          { name: "Telegram Ads", cac: 22, cr: 2.2 },
-                          { name: "VK Реклама", cac: 24, cr: 2.4 },
-                          { name: "Авито / Карты", cac: 18, cr: 4.2 },
-                          { name: "Google Ads", cac: 38, cr: 3.0 },
-                          { name: "Meta Ads", cac: 25, cr: 2.5 },
+                          { name: "Instagram Ads (Reels)", cac: 8500, cr: 2.8 },
+                          { name: "2GIS (Казахстан)", cac: 6500, cr: 4.5 },
+                          { name: "TikTok Ads (РК)", cac: 7200, cr: 2.4 },
+                          { name: "Google.kz (Поиск)", cac: 12500, cr: 3.6 },
+                          { name: "WhatsApp / Telegram", cac: 5800, cr: 4.0 },
+                          { name: "Яндекс.Директ (РК)", cac: 11000, cr: 3.2 },
                         ].map((q) => {
                           const isAlreadyAdded = channels.some(
                             (c) => c.name.toLowerCase() === q.name.toLowerCase()

@@ -35,7 +35,7 @@ class PredictRequest(BaseModel):
     ltv: float | None = Field(default=None, gt=0)
     targetMargin: float | None = Field(default=None, ge=0, le=100, description="Маржинальность в %")
     durationDays: int | None = Field(default=30, gt=0)
-    currency: str = "USD"
+    currency: str = "KZT"
     channels: list[Channel] = Field(min_length=1)
 
     @field_validator("channels")

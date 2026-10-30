@@ -23,7 +23,7 @@ const requestSchema = z.object({
   ltv: z.number().positive().optional(),
   targetMargin: z.number().min(0).max(100).optional(),
   durationDays: z.number().int().positive().optional(),
-  currency: z.string().default("USD"),
+  currency: z.string().default("KZT"),
   channels: z.array(channelSchema).min(1).optional(),
 });
 

@@ -51,7 +51,7 @@ const COLORS = ["#4f46e5", "#06b6d4", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6"
 type ActiveTab = "overview" | "scenarios" | "curves" | "flightplan";
 type ScenarioType = "balanced" | "conservative" | "aggressive";
 
-export default function ResultsView({ data, currency = "USD" }: ResultsViewProps) {
+export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps) {
   const [activeTab, setActiveTab] = useState<ActiveTab>("overview");
   const [selectedScenario, setSelectedScenario] = useState<ScenarioType>("balanced");
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
