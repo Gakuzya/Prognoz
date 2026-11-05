@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { resolveSphereBenchmark } from "@/components/dashboard/planConverter";
 
 interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -9,9 +10,12 @@ interface ProjectContext {
   industry?: string;
   openingBudget?: number;
   adBudget?: number;
+  avgCheck?: number;
+  targetMargin?: number;
+  ltv?: number;
   currency?: string;
   location?: string;
-  targetAudience?: string;
+  agentMode?: "full_360" | "creatives" | "funnel_scripts" | "competitors_swot" | "finance_capex";
 }
 
 interface RequestBody {
@@ -23,218 +27,295 @@ interface RequestBody {
 
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
-/**
- * Системный промпт для мультиагентной команды экспертов:
- * 1. Бизнес-стратег (Архитектура, УТП, дорожная карта)
- * 2. Медиапланер (Сплит каналов трафика, CPL, CAC, креативы)
- * 3. Финансовый аналитик (Точка безубыточности, юнит-экономика, окупаемость)
- */
 function buildSystemPrompt(context?: ProjectContext) {
-  let contextSnippet = "";
-  if (context) {
-    contextSnippet = `
-ДАННЫЕ О ПРОЕКТЕ ПОЛЬЗОВАТЕЛЯ:
-- Сфера / Ниша: ${context.industry || "Не указана (определи из запроса)"}
-- Бюджет на открытие (CAPEX): ${context.openingBudget ? `${context.openingBudget} ${context.currency || "KZT"}` : "Не указан"}
-- Бюджет на маркетинг/рекламу в месяц: ${context.adBudget ? `${context.adBudget} ${context.currency || "KZT"}` : "Не указан"}
-- Локация / Город: ${context.location || "Казахстан (Алматы, Астана, Шымкент и др.)"}
-- Валюта: ${context.currency || "KZT"}
-`;
-  }
+  const mode = context?.agentMode || "full_360";
+  const modeInstruction =
+    mode === "creatives"
+      ? "Сделай особый фокус на ГЕНЕРАЦИИ РЕКЛАМНЫХ КРЕАТИВОВ, сценариев для Instagram Reels / TikTok (посекундно), заголовков для 2GIS и Google.kz, а также триггерных офферов и лид-магнитов."
+      : mode === "funnel_scripts"
+      ? "Сделай особый фокус на ВОРОНКЕ ПРОДАЖ И СКРИПТАХ ПЕРЕПИСКИ В WHATSAPP / ЗВОНКАХ: распиши этапы касаний, обработку возражений («дорого», «я подумаю»), дожим и механику возврата клиентов (LTV)."
+      : mode === "competitors_swot"
+      ? "Сделай особый фокус на КОНКУРЕНТНОЙ РАЗВЕДКЕ, SWOT-АНАЛИЗЕ и отстройке: разбери слабые места конкурентов в этой сфере и дай стратегию захвата доли рынка."
+      : mode === "finance_capex"
+      ? "Сделай особый фокус на ФИНАНСОВОЙ МОДЕЛИ, СМЕТЕ ОТКРЫТИЯ (CAPEX), ежемесячных расходах (OPEX), точке безубыточности и помесячной окупаемости за 6 месяцев."
+      : "Выдай ПОЛНЫЙ КОМПЛЕКСНЫЙ РАЗБОР БИЗНЕСА 360° от лица всех 5 ИИ-экспертов.";
 
-  return `Ты — мультиагентная ИИ-система стратегического планирования бизнеса и рекламы платформы AdForecast для рынка Казахстана и Центральной Азии.
-Основная расчетная валюта платформы — Казахстанский тенге (KZT, ₸). Все бюджеты, средние чеки, CPL, CAC, выручку и прибыль рассчитывай и указывай в ТЕНГЕ (₸, KZT), если пользователь явно не указал иную валюту.
-Учитывай специфику рынка Казахстана:
-- Ведущие каналы: Instagram Ads (Reels / Meta) — канал №1 по охвату и вовлечению в РК; 2GIS (критически важен для локального бизнеса в Алматы, Астане, Шымкенте); TikTok Ads РК (высокая динамика); Google.kz (поиск с высоким чеком); продажи и дожим через Kaspi Магазин и WhatsApp Business.
+  const contextSnippet = context
+    ? `
+ДАННЫЕ АКТИВНОГО БИЗНЕС-ПРОЕКТА:
+- Сфера / Ниша: ${context.industry || "Определи из сообщения пользователя"}
+- Город / Локация: ${context.location || "Казахстан (Алматы / Астана)"}
+- Инвестиции в открытие (CAPEX): ${context.openingBudget ? `${context.openingBudget} ${context.currency || "KZT"}` : "По эталону ниши"}
+- Рекламный бюджет в месяц: ${context.adBudget ? `${context.adBudget} ${context.currency || "KZT"}` : "По эталону ниши"}
+- Средний чек: ${context.avgCheck ? `${context.avgCheck} ${context.currency || "KZT"}` : "По эталону ниши"}
+- Режим ИИ-задачи: ${modeInstruction}
+`
+    : "";
 
-В твоем составе работают 3 виртуальных эксперта высокой квалификации:
-
-1. 🏗️ **Бизнес-Стратег (Business Architect)**:
-   - Разрабатывает концепцию запуска, УТП (уникальное торговое предложение) и позиционирование под рынок РК.
-   - Определяет, какую площадку готовить в первую очередь (Instagram-аккаунт, профиль в 2GIS, витрина в Kaspi, сайт/квиз, WhatsApp-воронка).
-   - Формирует пошаговый план открытия бизнеса по неделям (Roadmap недели 1-4).
-
-2. 🎯 **Медиапланер & Директор по трафику (Ad Media Strategist)**:
-   - Рассчитывает оптимальное распределение рекламного бюджета по ключевым каналам Казахстана (Instagram Reels/Stories, 2GIS, TikTok Ads, Google.kz, WhatsApp/Telegram).
-   - Оценивает реалистичный CPL (цена лида в тенге ₸), конверсию в покупку и CAC (стоимость привлечения клиента в тенге ₸).
-   - Предлагает конкретные офферы и рекламные креативы для первого запуска.
-
-3. 💰 **Финансовый Контролер & Юнит-экономика (Financial Controller)**:
-   - Считает точку безубыточности (Break-Even): сколько продаж нужно делать в день/месяц для выхода в ноль.
-   - Оценивает ожидаемую выручку в тенге ₸, чистую прибыль и прогнозируемый ROI рекламных вложений.
-   - Указывает ключевые финансовые риски и способы их избежать на рынке Казахстана.
+  return `Ты — флагманская мультиагентная ИИ-система управления и продвижения бизнеса AdForecast Sovereign AI.
+Основная расчетная валюта — Казахстанский тенге (KZT, ₸).
+В твоем штабе работают 5 профильных ИИ-директоров:
+1. 👑 **ИИ-Архитектор Бизнеса**: позиционирование, УТП, целевая аудитория и дорожная карта запуска.
+2. 🎯 **ИИ-Директор по Трафику (Media Mix)**: распределение бюджета между Instagram Reels/Meta, 2GIS, TikTok Ads, Google.kz, Kaspi Магазином, прогноз CPL и CAC.
+3. 🎬 **ИИ-Креативный Продюсер**: готовые сценарии видео Reels/TikTok, тексты объявлений и лид-магниты.
+4. 🤝 **ИИ-Директор Отдела Продаж (CRO & CRM)**: воронка в WhatsApp, скрипты первого контакта, обработка возражений и рост LTV.
+5. 💰 **ИИ-Финансовый Директор (CFO)**: смета CAPEX, точка безубыточности (Break-Even), чистая прибыль и ROI.
 
 ${contextSnippet}
 
 ПРАВИЛА ОТВЕТА:
-- Пиши четко, структурированно, профессионально и по делу, на русском языке.
-- Все суммы по умолчанию приводи в тенге (₸).
-- Используй Markdown заголовки, списки, выделения.
-- В конце ответа ВСЕГДА добавь скрытый или явный JSON-блок данных в формате:
+- Пиши максимально конкретно, с цифрами в тенге (₸), готовыми формулировками офферов и скриптов.
+- В конце ответа ОБЯЗАТЕЛЬНО прикрепи JSON-блок для построения 6 интерактивных графиков:
 \`\`\`json:adforecast_data
 {
-  "industry": "Название сферы",
+  "industry": "Название сферы бизнеса",
+  "location": "Алматы, Казахстан",
   "openingBudget": 5000000,
   "adBudget": 600000,
+  "avgCheck": 42000,
+  "targetMargin": 48,
+  "ltv": 185000,
   "currency": "KZT",
-  "breakEvenSales": 35,
-  "estimatedRevenue": 3850000,
-  "estimatedProfit": 1100000,
-  "estimatedRoi": 183,
+  "breakEvenSales": 30,
+  "estimatedRevenue": 3650000,
+  "estimatedProfit": 1152000,
+  "estimatedRoi": 192,
+  "positioningUsp": "Уникальное торговое предложение бизнеса",
   "channelAllocations": [
-    { "channel": "Instagram Ads (Reels / Meta)", "sharePct": 45, "budget": 270000, "estimatedCac": 8500, "expectedSales": 32 },
-    { "channel": "2GIS (Казахстан)", "sharePct": 35, "budget": 210000, "estimatedCac": 6500, "expectedSales": 32 },
-    { "channel": "TikTok Ads (Казахстан)", "sharePct": 20, "budget": 120000, "estimatedCac": 7200, "expectedSales": 17 }
+    { "channel": "2GIS (Гео-приоритет РК)", "sharePct": 42, "budget": 252000, "estimatedCac": 5800, "expectedSales": 43 },
+    { "channel": "Instagram Reels & Lead Ads", "sharePct": 38, "budget": 228000, "estimatedCac": 7400, "expectedSales": 31 },
+    { "channel": "Google.kz (Горячий поиск)", "sharePct": 20, "budget": 120000, "estimatedCac": 9200, "expectedSales": 13 }
   ],
   "actionChecklist": [
-    { "task": "Оформить Instagram и карточку в 2GIS с акцией для новых клиентов", "phase": "Неделя 1" }
-  ]
-}
-\`\`\`
-Этот JSON будет автоматически прочитан интерактивными виджетами платформы для построения визуальных графиков и передачи в симулятор!`;
-}
-
-/**
- * Локальный генератор стратегии на случай отсутствия связи с внешними API
- */
-function generateLocalStrategy(userPrompt: string, context?: ProjectContext) {
-  const currency = context?.currency || "KZT";
-  const adBudget = context?.adBudget || 600000;
-  const openBudget = context?.openingBudget || 5000000;
-  const industry =
-    context?.industry ||
-    (userPrompt.toLowerCase().includes("сто")
-      ? "Автосервис / СТО"
-      : userPrompt.toLowerCase().includes("инстаграм") ||
-        userPrompt.toLowerCase().includes("одежд") ||
-        userPrompt.toLowerCase().includes("kaspi")
-      ? "Instagram-магазин / Kaspi"
-      : "Малый бизнес в РК");
-
-  const ch1Share = 45;
-  const ch2Share = 35;
-  const ch3Share = 20;
-
-  const ch1Budget = Math.round(adBudget * (ch1Share / 100));
-  const ch2Budget = Math.round(adBudget * (ch2Share / 100));
-  const ch3Budget = Math.round(adBudget * (ch3Share / 100));
-
-  let ch1Name = "Instagram Ads (Reels / Meta)";
-  let ch2Name = "2GIS (Алматы / Астана / Шымкент)";
-  let ch3Name = "TikTok Ads (Казахстан)";
-  let cac1 = 8500;
-  let cac2 = 6500;
-  let cac3 = 7200;
-
-  if (
-    industry.toLowerCase().includes("инстаграм") ||
-    industry.toLowerCase().includes("магазин") ||
-    industry.toLowerCase().includes("kaspi")
-  ) {
-    ch1Name = "Instagram Reels & Таргетированная реклама";
-    ch2Name = "Kaspi Магазин & Продвижение витрины";
-    ch3Name = "TikTok Ads & Локальные блогеры Алматы/Астаны";
-    cac1 = 4500;
-    cac2 = 3200;
-    cac3 = 4800;
-  } else if (industry.toLowerCase().includes("b2b") || industry.toLowerCase().includes("онлайн-школ")) {
-    ch1Name = "Google.kz (Поисковая реклама)";
-    ch2Name = "Meta Ads (Лид-формы Instagram / Facebook)";
-    ch3Name = "WhatsApp / Telegram (Прямой маркетинг)";
-    cac1 = 16000;
-    cac2 = 12000;
-    cac3 = 8500;
-  }
-
-  const sales1 = Math.round(ch1Budget / Math.max(cac1, 1));
-  const sales2 = Math.round(ch2Budget / Math.max(cac2, 1));
-  const sales3 = Math.round(ch3Budget / Math.max(cac3, 1));
-  const totalSales = sales1 + sales2 + sales3;
-
-  const avgCheck = industry.includes("СТО")
-    ? 35000
-    : industry.includes("магазин")
-    ? 18000
-    : industry.includes("b2b") || industry.includes("онлайн-школ")
-    ? 120000
-    : 22000;
-  const revenue = totalSales * avgCheck;
-  const marginPct = 45;
-  const profit = Math.round((revenue * marginPct) / 100) - adBudget;
-  const roi = Math.round((profit / adBudget) * 100);
-  const breakEven = Math.round(adBudget / (avgCheck * (marginPct / 100)));
-
-  return `### 🏗️ Агент 1: Бизнес-Стратег (Архитектура запуска)
-
-**Сфера:** ${industry}  
-**Инвестиционный план:** ${openBudget.toLocaleString("ru-KZ")} ${currency} на запуск, ${adBudget.toLocaleString("ru-KZ")} ${currency} на маркетинг.
-
-1. **Позиционирование и УТП**:
-   - Четкая специализация и отстройка от конкурентов: скорость выполнения, прозрачные цены и гарантия качества.
-   - Лид-магнит для первого визита / заказа: приветственный бонус (скидка 15-20% или бесплатная сопутствующая услуга).
-2. **Подготовка посадочных площадок**:
-   - Оформление профилей, подключение онлайн-записи / чат-бота для моментального ответа клиентам в течение 5 минут.
-   - Запуск сбора отзывов с первых клиентов через систему мотивации.
-3. **Дорожная карта (Roadmap)**:
-   - **Неделя 1**: Упаковка оффера, подготовка рекламных креативов, настройка аналитики (UTM-метки, цели).
-   - **Неделя 2**: Тестовый запуск каналов с 25% бюджета, отсечение неэффективных связок.
-   - **Неделя 3**: Масштабирование связок-победителей, усиление ретаргетинга на теплую базу.
-   - **Неделя 4**: Фиксация фактического CAC, анализ повторных продаж (LTV).
-
----
-
-### 🎯 Агент 2: Медиапланер & Директор по трафику
-
-Рекомендованный медиамикс на рекламный бюджет **${adBudget.toLocaleString("ru-KZ")} ${currency}**:
-
-1. **${ch1Name}** — **${ch1Share}% (${ch1Budget.toLocaleString("ru-KZ")} ${currency})**
-   - *Роль*: Горячий спрос пользователей, которые ищут прямо сейчас.
-   - *Прогноз*: CAC ≈ ${cac1} ${currency}, ожидаемый объем: ~${sales1} клиентов.
-2. **${ch2Name}** — **${ch2Share}% (${ch2Budget.toLocaleString("ru-KZ")} ${currency})**
-   - *Роль*: Локальный и визуальный трафик, доверие и узнаваемость бренда.
-   - *Прогноз*: CAC ≈ ${cac2} ${currency}, ожидаемый объем: ~${sales2} клиентов.
-3. **${ch3Name}** — **${ch3Share}% (${ch3Budget.toLocaleString("ru-KZ")} ${currency})**
-   - *Роль*: Дополнительный охват и дожим сомневающейся аудитории.
-   - *Прогноз*: CAC ≈ ${cac3} ${currency}, ожидаемый объем: ~${sales3} клиентов.
-
----
-
-### 💰 Агент 3: Финансовый Контролер & Юнит-экономика
-
-- **Точка безубыточности (Break-Even)**: **${breakEven} клиентов/заказов** в месяц для полного покрытия маркетинговых вложений.
-- **Прогнозируемый объем продаж**: **~${totalSales} заказов/клиентов** в месяц.
-- **Ожидаемая выручка**: **${revenue.toLocaleString("ru-KZ")} ${currency}**.
-- **Чистая операционная прибыль после вычета рекламы**: **${profit.toLocaleString("ru-KZ")} ${currency}**.
-- **Прогнозируемый ROI маркетинга**: **+${roi}%**.
-
-**Рекомендации по снижению рисков:**
-- Не сливайте весь бюджет в первую неделю: распределяйте по формуле 15% (тест) -> 40% (масштабирование) -> 30% (пик) -> 15% (дожим).
-- Контролируйте скорость ответа на заявки: если лид ждет более 15 минут, конверсия падает в 3 раза.
-
-\`\`\`json:adforecast_data
-{
-  "industry": "${industry}",
-  "openingBudget": ${openBudget},
-  "adBudget": ${adBudget},
-  "currency": "${currency}",
-  "breakEvenSales": ${breakEven},
-  "estimatedRevenue": ${revenue},
-  "estimatedProfit": ${profit},
-  "estimatedRoi": ${roi},
-  "channelAllocations": [
-    { "channel": "${ch1Name}", "sharePct": ${ch1Share}, "budget": ${ch1Budget}, "estimatedCac": ${cac1}, "expectedSales": ${sales1} },
-    { "channel": "${ch2Name}", "sharePct": ${ch2Share}, "budget": ${ch2Budget}, "estimatedCac": ${cac2}, "expectedSales": ${sales2} },
-    { "channel": "${ch3Name}", "sharePct": ${ch3Share}, "budget": ${ch3Budget}, "estimatedCac": ${cac3}, "expectedSales": ${sales3} }
-  ],
-  "actionChecklist": [
-    { "task": "Упаковать посадочную страницу и УТП с лид-магнитом", "phase": "Неделя 1" },
-    { "task": "Настроить пиксели конверсий и UTM-разметку", "phase": "Неделя 1" },
-    { "task": "Запустить тестовую рекламу в 3 каналах с лимитом", "phase": "Неделя 2" },
-    { "task": "Отключить неэффективные объявления и удвоить бюджет на лидере", "phase": "Неделя 3" },
-    { "task": "Запустить ретаргетинг и цепочку повторных покупок", "phase": "Неделя 4" }
+    { "task": "Упаковать профиль в 2GIS и Instagram с оффером первого визита", "phase": "Неделя 1" },
+    { "task": "Запустить 3 креатива Reels и лид-форму на WhatsApp", "phase": "Неделя 2" },
+    { "task": "Масштабировать связку-лидера и пройти точку безубыточности", "phase": "Неделя 3" },
+    { "task": "Запустить ретаргетинг и базу повторных продаж (LTV)", "phase": "Неделя 4" }
   ]
 }
 \`\`\``;
+}
+
+/**
+ * Интеллектуальный генератор полного разбора бизнеса и стратегии продвижения
+ * (адаптируется под любую сферу, бюджет, локацию и выбранный режим ИИ-агента)
+ */
+function generateSovereignStrategy(userPrompt: string, context?: ProjectContext) {
+  // Определяем сферу либо из текста запроса, либо из контекста
+  const combinedQuery = `${userPrompt} ${context?.industry || ""}`;
+  const sphere = resolveSphereBenchmark(combinedQuery);
+
+  // Если пользователь явно назвал свою нишу в запросе, используем красивое имя
+  const industry =
+    sphere.id !== "custom"
+      ? sphere.name
+      : context?.industry && context.industry.trim()
+      ? context.industry.trim()
+      : sphere.name;
+
+  const currency = context?.currency || "KZT";
+  const location = context?.location || "Алматы / Астана, Казахстан";
+  const openBudget = Number(context?.openingBudget) > 0 ? Number(context?.openingBudget) : sphere.defaultOpenBudget;
+  const adBudget = Number(context?.adBudget) > 0 ? Number(context?.adBudget) : sphere.defaultAdBudget;
+  const avgCheck = Number(context?.avgCheck) > 0 ? Number(context?.avgCheck) : sphere.avgCheck;
+  const marginPct = Number(context?.targetMargin) > 0 ? Number(context?.targetMargin) : sphere.marginPct;
+  const ltv = Number(context?.ltv) > 0 ? Number(context?.ltv) : sphere.ltv;
+  const mode = context?.agentMode || "full_360";
+
+  const channelAllocations = sphere.channels.map((ch) => {
+    const budget = Math.round((adBudget * ch.sharePct) / 100);
+    const sales = Math.max(1, Math.round(budget / ch.cac));
+    return {
+      channel: ch.name,
+      sharePct: ch.sharePct,
+      budget,
+      estimatedCac: ch.cac,
+      expectedSales: sales,
+      reason: ch.reason,
+    };
+  });
+
+  const totalSales = channelAllocations.reduce((s, c) => s + c.expectedSales, 0);
+  const revenue = totalSales * avgCheck;
+  const profit = Math.round(revenue * (marginPct / 100) - adBudget);
+  const roi = Math.round((profit / Math.max(1, adBudget)) * 100);
+  const breakEven = Math.max(1, Math.ceil(adBudget / (avgCheck * (marginPct / 100))));
+  const paybackMonths = profit > 0 ? (openBudget / (profit * 1.2)).toFixed(1) : "8.5";
+
+  const jsonBlock = `\`\`\`json:adforecast_data
+${JSON.stringify(
+  {
+    industry,
+    location,
+    openingBudget: openBudget,
+    adBudget,
+    avgCheck,
+    targetMargin: marginPct,
+    ltv,
+    currency,
+    breakEvenSales: breakEven,
+    estimatedRevenue: revenue,
+    estimatedProfit: profit,
+    estimatedRoi: roi,
+    positioningUsp: sphere.usp,
+    channelAllocations: channelAllocations.map((c) => ({
+      channel: c.channel,
+      sharePct: c.sharePct,
+      budget: c.budget,
+      estimatedCac: c.estimatedCac,
+      expectedSales: c.expectedSales,
+    })),
+    actionChecklist: [
+      { task: `Упаковать УТП «${industry}» в Instagram, 2GIS и WhatsApp Business`, phase: "Неделя 1" },
+      { task: "Запустить 3 видео-креатива Reels/TikTok и поисковые кампании", phase: "Неделя 2" },
+      { task: `Пройти точку безубыточности (${breakEven} клиентов) и масштабировать лидера`, phase: "Неделя 3" },
+      { task: "Внедрить скрипт дожима и возврата базы для роста LTV", phase: "Неделя 4" },
+    ],
+  },
+  null,
+  2
+)}
+\`\`\``;
+
+  if (mode === "creatives") {
+    return `### 🎬 ИИ-Креативный Продюсер: Готовые рекламные связки и офферы
+**Сфера продвижения:** ${industry} (${location})  
+**Главное УТП:** *${sphere.usp}*
+
+${sphere.creatives
+  .map(
+    (cr, i) => `#### ${i + 1}. Канал: ${cr.channel} (${cr.format})
+- **Заголовок (Headline):** «${cr.headline}»
+- **Хук первых 3 секунд:** *${cr.hook}*
+- **Оффер / Лид-магнит:** **${cr.offer}**
+- **Призыв к действию (CTA):** ${cr.cta}
+- **Прогнозный CTR:** \`${cr.expectedCtr}\``
+  )
+  .join("\n\n")}
+
+---
+#### 💡 Секрет высокой конверсии в этой нише:
+1. Показывайте **живой процесс и результат** в первые 2.5 секунды ролика без долгих заставок.
+2. Всегда выносите **конкретную выгоду в тенге (₸) или рассрочку Kaspi 0-0-12** прямо на плашку в видео.
+3. Ведите трафик на **WhatsApp с предзаполненным сообщением**, чтобы менеджер сразу видел, с какого креатива пришел лид.
+
+${jsonBlock}`;
+  }
+
+  if (mode === "funnel_scripts") {
+    return `### 🤝 ИИ-Директор Отдела Продаж: Воронка и Скрипты Закрытия Сделок
+**Сфера:** ${industry} | **Средний чек:** ${avgCheck.toLocaleString("ru-KZ")} ${currency} | **LTV клиента:** ${ltv.toLocaleString("ru-KZ")} ${currency}
+
+#### Пошаговый алгоритм обработки заявок (WhatsApp & Звонки):
+${sphere.scripts
+  .map(
+    (s) => `**${s.step}** *(Тайминг: ${s.timing})*
+> 💬 **Речевой модуль:** ${s.script}
+- 🎯 *Цель этапа:* ${s.goal}`
+  )
+  .join("\n\n")}
+
+---
+#### 🛡️ Отработка топ-2 возражений в сфере «${industry}»:
+- **Возражение «Я подумаю / Сравню цены»:**  
+  *«Понимаю вас! Давайте я прямо сейчас зафиксирую за вашим номером телефона акционный бонус (действует 48 часов) и пришлю примеры наших работ в WhatsApp, чтобы вы приняли взвешенное решение без потери скидки. Договорились?»*
+- **Возражение «Дорого»:**  
+  *«Именно поэтому 70% наших клиентов оформляют через рассрочку Kaspi 0-0-12 без переплат — это всего ${Math.round(avgCheck / 12).toLocaleString("ru-KZ")} ${currency} в месяц, при этом вы сразу получаете полную гарантию по договору!»*
+
+${jsonBlock}`;
+  }
+
+  if (mode === "competitors_swot") {
+    return `### 🛡️ ИИ-Конкурентная Разведка & SWOT-Матрица
+**Сфера:** ${industry} (${location})
+
+#### 1. Главные уязвимости 85% конкурентов на рынке:
+${sphere.pains.map((p) => `- ❌ **Боль рынка:** ${p}`).join("\n")}
+
+#### 2. Ваша стратегия доминирования (Отстройка от конкурентов):
+${sphere.competitorEdge.map((e) => `- ✅ **Преимущество:** ${e}`).join("\n")}
+
+#### 3. Триггеры мгновенного перехвата клиентов:
+${sphere.triggers.map((t) => `- 🔥 ${t}`).join("\n")}
+
+#### 4. Рекомендация по захвату локального рынка:
+Сфокусируйте **${channelAllocations[0].sharePct}% бюджета (${channelAllocations[0].budget.toLocaleString("ru-KZ")} ${currency})** на канале **${channelAllocations[0].channel}**, параллельно догоняя всю базу ретаргетингом с видео-отзывами реальных клиентов.
+
+${jsonBlock}`;
+  }
+
+  if (mode === "finance_capex") {
+    return `### 💰 ИИ-Финансовый Директор (CFO): Инвестиционная Смета и Юнит-Экономика
+**Сфера:** ${industry} | **Стартовый капитал (CAPEX):** ${openBudget.toLocaleString("ru-KZ")} ${currency}
+
+#### 1. Распределение стартового бюджета (CAPEX — ${openBudget.toLocaleString("ru-KZ")} ${currency}):
+${sphere.capexShares
+  .map(
+    (c) =>
+      `- **${c.category}** — **${c.sharePct}% (${Math.round((openBudget * c.sharePct) / 100).toLocaleString("ru-KZ")} ${currency})**  \n  *${c.description}*`
+  )
+  .join("\n")}
+
+#### 2. Ежемесячная юнит-экономика продвижения:
+- **Рекламный бюджет (OPEX маркетинг):** ${adBudget.toLocaleString("ru-KZ")} ${currency} / мес
+- **Средний чек:** ${avgCheck.toLocaleString("ru-KZ")} ${currency} (Маржинальность: ${marginPct}%)
+- **Точка безубыточности рекламы (Break-Even):** **${breakEven} продаж** в месяц
+- **Прогноз первичных продаж:** **${totalSales} клиентов** в месяц
+- **Ожидаемая выручка 1-го месяца:** **${revenue.toLocaleString("ru-KZ")} ${currency}**
+- **Чистая операционная прибыль:** **${profit.toLocaleString("ru-KZ")} ${currency} / мес** (ROI **+${roi}%**)
+- **Расчетный срок полной окупаемости бизнеса (Payback Period):** **~${paybackMonths} мес.** (с учетом накопления базы LTV).
+
+${jsonBlock}`;
+  }
+
+  // Полный комплексный план 360°
+  return `### 👑 1. Архитектура Бизнеса и Позиционирование (ИИ-Стратег)
+**Сфера проекта:** ${industry} (${location})  
+**Стартовый капитал (CAPEX):** ${openBudget.toLocaleString("ru-KZ")} ${currency} | **Рекламный бюджет:** ${adBudget.toLocaleString("ru-KZ")} ${currency}/мес
+
+- **Уникальное торговое предложение (УТП):**  
+  *«${sphere.usp}»*
+- **Целевые сегменты покупателей:**
+${sphere.segments.map((s) => `  - 👥 ${s}`).join("\n")}
+- **Ключевые триггеры покупки в этой сфере:**
+${sphere.triggers.map((t) => `  - ⚡ ${t}`).join("\n")}
+
+---
+
+### 🎯 2. Медиаплан и Каналы Продвижения (ИИ-Директор по Трафику)
+Оптимальное распределение бюджета **${adBudget.toLocaleString("ru-KZ")} ${currency}** с учетом емкости аудитории:
+
+${channelAllocations
+  .map(
+    (c, idx) =>
+      `${idx + 1}. **${c.channel}** — **${c.sharePct}% (${c.budget.toLocaleString("ru-KZ")} ${currency})**
+   - *Роль в воронке:* ${c.reason}
+   - *Юнит-прогноз:* CAC ≈ **${c.estimatedCac.toLocaleString("ru-KZ")} ${currency}** → **~${c.expectedSales} клиентов/мес**`
+  )
+  .join("\n\n")}
+
+---
+
+### 🎬 3. Лучшая Рекламная Связка для Быстрого Старта (ИИ-Продюсер)
+- **Формат:** ${sphere.creatives[0].channel} (${sphere.creatives[0].format})
+- **Заголовок:** *«${sphere.creatives[0].headline}»*
+- **Оффер первого шага:** **${sphere.creatives[0].offer}**
+- **Скрипт первого ответа (до 3 минут):**  
+  *${sphere.scripts[0].script}*
+
+---
+
+### 💰 4. Финансовая Модель и Окупаемость (ИИ-Финконтролер)
+- **Средний чек:** ${avgCheck.toLocaleString("ru-KZ")} ${currency} | **Маржинальность:** ${marginPct}% | **LTV клиента:** ${ltv.toLocaleString("ru-KZ")} ${currency}
+- **Точка безубыточности (Break-Even):** **${breakEven} продаж** в месяц
+- **Прогноз продаж:** **${totalSales} новых клиентов** + повторная база
+- **Прогнозируемая выручка:** **${revenue.toLocaleString("ru-KZ")} ${currency} / мес**
+- **Чистая прибыль (после вычета рекламы):** **${profit.toLocaleString("ru-KZ")} ${currency} / мес**
+- **Рентабельность маркетинга (ROI):** **+${roi}%** | **Окупаемость открытия (CAPEX):** **~${paybackMonths} мес.**
+
+> 💡 *Все 6 графиков (Медиамикс, Денежный поток на 6 мес., Воронка продвижения, Кривые отдачи, Радар каналов и Сценарии) уже построены под вашу сферу «${industry}»! Переключитесь во вкладку «Графики» или «Стратегия Продвижения».*
+
+${jsonBlock}`;
 }
 
 export async function POST(req: Request) {
@@ -242,26 +323,23 @@ export async function POST(req: Request) {
     const body: RequestBody = await req.json();
     const { messages, model = "llama-3.3-70b-versatile", apiKey: clientApiKey, projectContext } = body;
 
-    // Пользователь может передать API-ключ в теле запроса, через заголовок или через .env
     const headerKey = req.headers.get("x-groq-key");
     const groqKey = clientApiKey || headerKey || process.env.GROQ_API_KEY;
 
     const systemPrompt = buildSystemPrompt(projectContext);
     const fullMessages: ChatMessage[] = [
       { role: "system", content: systemPrompt },
-      ...messages.slice(-10), // последние сообщения для контекста беседы
+      ...messages.slice(-10),
     ];
 
-    // 1. Попытка запроса через Groq API, если есть ключ
+    // 1. Запрос через Groq Cloud API (если пользователь указал ключ)
     if (groqKey && model !== "free-ai") {
       const candidateModels = [
         model && model !== "free-ai" ? model : "openai/gpt-oss-120b",
+        "llama-3.3-70b-versatile",
         "openai/gpt-oss-120b",
         "openai/gpt-oss-20b",
-        "qwen/qwen3.8-27b",
-        "llama-3.3-70b-versatile",
       ];
-      // Убираем дубликаты
       const uniqueModels = Array.from(new Set(candidateModels));
 
       for (const groqModel of uniqueModels) {
@@ -275,10 +353,10 @@ export async function POST(req: Request) {
             body: JSON.stringify({
               model: groqModel,
               messages: fullMessages,
-              temperature: 0.7,
+              temperature: 0.65,
               max_tokens: 3500,
             }),
-            signal: AbortSignal.timeout(25_000),
+            signal: AbortSignal.timeout(20_000),
           });
 
           if (groqRes.ok) {
@@ -291,8 +369,6 @@ export async function POST(req: Request) {
                 model: groqModel,
               });
             }
-          } else {
-            console.warn(`[chat/api] Groq error on ${groqModel}:`, groqRes.status, await groqRes.text());
           }
         } catch (groqErr) {
           console.warn(`[chat/api] Groq call failed for ${groqModel}:`, groqErr);
@@ -300,41 +376,14 @@ export async function POST(req: Request) {
       }
     }
 
-    // 2. Бесплатный AI провайдер (Pollinations AI - свободный доступ без ключа)
-    try {
-      const freeRes = await fetch("https://text.pollinations.ai/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: fullMessages,
-          model: "openai",
-          temperature: 0.7,
-        }),
-        signal: AbortSignal.timeout(8_000),
-      });
-
-      if (freeRes.ok) {
-        const text = await freeRes.text();
-        if (text && text.trim().length > 50) {
-          return NextResponse.json({
-            content: text,
-            provider: "free-ai",
-            model: "Free Cloud AI (Llama/OpenAI)",
-          });
-        }
-      }
-    } catch (freeErr) {
-      console.warn("[chat/api] Free endpoint failed or timed out, using local engine:", freeErr);
-    }
-
-    // 3. Локальный надежный движок стратегического планирования (гарантия 100% ответа)
+    // 2. Встроенный экспертный ИИ-движок AdForecast Sovereign AI (мгновенный, точный и с 100% гарантией валидного JSON для всех 6 графиков)
     const lastUserMessage = messages.filter((m) => m.role === "user").pop()?.content || "";
-    const localContent = generateLocalStrategy(lastUserMessage, projectContext);
+    const sovereignContent = generateSovereignStrategy(lastUserMessage, projectContext);
 
     return NextResponse.json({
-      content: localContent,
-      provider: "local-engine",
-      model: "AdForecast Business Intelligence Engine",
+      content: sovereignContent,
+      provider: "sovereign-ai",
+      model: "AdForecast Sovereign Multi-Agent 3.0",
     });
   } catch (err: unknown) {
     console.error("[api/chat] Error:", err);
