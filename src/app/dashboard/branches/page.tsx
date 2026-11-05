@@ -66,18 +66,18 @@ export default async function BranchesPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <span className="text-xs font-extrabold uppercase tracking-wider text-amber-400">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#1F3A33]">
             Масштабирование бизнеса
           </span>
           <div className="mt-1 flex items-center gap-2.5">
-            <h1 className="text-xl font-extrabold tracking-tight text-white sm:text-2xl">
+            <h1 className="text-xl font-extrabold tracking-tight text-[#1C242B] sm:text-2xl">
               Филиалы и региональная сеть
             </h1>
-            <span className="rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-0.5 text-xs font-extrabold text-emerald-400">
+            <span className="rounded-full border border-[#D5DFDA] bg-[#EAF0ED] px-3 py-0.5 text-xs font-extrabold text-[#1F3A33]">
               {branches.length} активных точек
             </span>
           </div>
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="mt-1 text-xs text-[#5C6460]">
             Управляйте рекламными бюджетами конкретных филиалов, франшиз или городов без каннибализации трафика.
           </p>
         </div>

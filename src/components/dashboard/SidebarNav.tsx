@@ -5,14 +5,14 @@ import { usePathname } from "next/navigation";
 import {
   History,
   Settings,
-  Crown,
+  Compass,
   MapPin,
   Globe,
   type LucideIcon,
 } from "lucide-react";
 
 const items: { href: string; label: string; icon: LucideIcon; badge?: string }[] = [
-  { href: "/dashboard", label: "ИИ-Терминал & Графики", icon: Crown, badge: "PRO 3.0" },
+  { href: "/dashboard", label: "ИИ-Терминал & Графики", icon: Compass, badge: "PRO 3.0" },
   { href: "/dashboard/history", label: "Архив прогнозов", icon: History },
   { href: "/dashboard/branches", label: "Филиалы сети", icon: MapPin },
   { href: "/dashboard/settings", label: "Профиль бизнеса", icon: Settings },
@@ -35,23 +35,29 @@ export default function SidebarNav({ horizontal = false }: { horizontal?: boolea
           <Link
             key={href}
             href={href}
-            className={`group relative flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 ${
+            className={`group relative flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all duration-200 ${
               active
-                ? "bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent text-amber-300 ring-1 ring-amber-500/40 shadow-md shadow-amber-500/5"
-                : "text-zinc-400 hover:bg-white/[0.04] hover:text-white"
+                ? "bg-[#1F3A33] text-white shadow-xs"
+                : "text-[#5C6460] hover:bg-[#EFECE6] hover:text-[#1C242B]"
             }`}
           >
             <div className="flex items-center gap-2.5">
               <Icon
                 className={`h-4 w-4 transition-colors ${
-                  active ? "text-amber-400" : "text-zinc-500 group-hover:text-amber-400"
+                  active ? "text-[#A3D9C9]" : "text-[#7A827E] group-hover:text-[#1F3A33]"
                 }`}
               />
               <span className="whitespace-nowrap">{label}</span>
             </div>
 
             {badge && (
-              <span className="ml-2 rounded-full border border-amber-500/40 bg-amber-500/15 px-2 py-0.5 text-[9px] font-extrabold text-amber-300">
+              <span
+                className={`ml-2 rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                  active
+                    ? "bg-white/15 text-white"
+                    : "border border-[#D5CFC4] bg-[#F7F6F2] text-[#1F3A33]"
+                }`}
+              >
                 {badge}
               </span>
             )}

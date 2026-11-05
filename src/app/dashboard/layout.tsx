@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Crown, LogOut, UserCheck, Sparkles } from "lucide-react";
+import { Compass, LogOut, UserCheck, Sparkles } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import SidebarNav from "@/components/dashboard/SidebarNav";
@@ -13,7 +13,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   let userEmail: string | null = null;
-  let companyName = "ТОО «Sovereign Business»";
+  let companyName = "ТОО «Nordic Business»";
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -36,42 +36,42 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-[#070709] text-zinc-100">
-      {/* Боковая панель (Черно-золотая) */}
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-amber-500/20 bg-[#0b0b10] md:flex">
-        <div className="flex h-16 items-center justify-between border-b border-amber-500/20 px-5">
+    <div className="flex min-h-screen bg-[#F7F6F2] text-[#1C242B]">
+      {/* Боковая панель (Скандинавский лен и хвоя) */}
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-[#E2DDD3] bg-[#FBF9F5] md:flex">
+        <div className="flex h-16 items-center justify-between border-b border-[#E2DDD3] px-5">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 text-black shadow-md shadow-amber-500/20">
-              <Crown className="h-4 w-4" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#1F3A33] text-white shadow-xs">
+              <Compass className="h-4 w-4" />
             </span>
             <div>
-              <span className="font-extrabold tracking-tight text-white block text-sm leading-none">
+              <span className="font-bold tracking-tight text-[#1C242B] block text-sm leading-none">
                 AdForecast
               </span>
-              <span className="text-[9px] font-bold uppercase tracking-widest text-amber-400">
-                SOVEREIGN AI
+              <span className="text-[9px] font-semibold uppercase tracking-widest text-[#4A6B5D]">
+                NORDIC AI
               </span>
             </div>
           </Link>
         </div>
 
         <div className="flex-1 p-3.5">
-          <div className="mb-2 px-2 text-[10px] font-extrabold uppercase tracking-wider text-zinc-500">
+          <div className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-wider text-[#7A827E]">
             Навигация платформы
           </div>
           <SidebarNav />
         </div>
 
         {/* Карточка тарифа в сайдбаре */}
-        <div className="m-3.5 rounded-2xl border border-amber-500/30 bg-gradient-to-b from-amber-500/15 to-transparent p-3.5">
-          <div className="flex items-center gap-2 text-xs font-extrabold text-amber-300">
-            <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+        <div className="m-3.5 rounded-2xl border border-[#E2DDD3] bg-[#F2EFE9] p-3.5">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#1F3A33]">
+            <Sparkles className="h-3.5 w-3.5 text-[#B85D3B]" />
             <span>Лицензия: Business PRO</span>
           </div>
-          <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed">
+          <p className="mt-1 text-[11px] text-[#5C6460] leading-relaxed">
             Все 5 ИИ-директоров, 6 графиков окупаемости и экспорт PDF активны.
           </p>
-          <p className="mt-2 truncate border-t border-white/10 pt-2 text-[11px] font-semibold text-white">
+          <p className="mt-2 truncate border-t border-[#E2DDD3] pt-2 text-[11px] font-semibold text-[#1C242B]">
             🏢 {companyName}
           </p>
         </div>
@@ -79,40 +79,40 @@ export default async function DashboardLayout({
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Верхняя шапка */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-amber-500/20 bg-[#070709]/90 px-4 backdrop-blur-xl sm:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#E2DDD3] bg-[#F7F6F2]/90 px-4 backdrop-blur-md sm:px-6">
           <div className="flex items-center gap-2.5 md:hidden">
             <Link href="/" className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 text-black">
-                <Crown className="h-4 w-4" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#1F3A33] text-white">
+                <Compass className="h-4 w-4" />
               </span>
-              <span className="font-extrabold text-white text-sm">AdForecast</span>
+              <span className="font-bold text-[#1C242B] text-sm">AdForecast</span>
             </Link>
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[11px] font-bold text-amber-300">
-              ИИ-Система Продвижения и Прогнозирования Бизнеса
+            <span className="rounded-full border border-[#D5CFC4] bg-white px-3.5 py-1 text-[11px] font-semibold text-[#1F3A33]">
+              Скандинавская аналитическая система продвижения бизнеса
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             <Link
               href="/onboarding"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition hover:border-amber-500/40 hover:text-amber-300"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-[#D5CFC4] bg-white px-3 py-1.5 text-xs font-semibold text-[#1C242B] transition hover:border-[#1F3A33]"
             >
               <span>Мастер настройки бизнеса</span>
             </Link>
 
             {userEmail ? (
               <div className="flex items-center gap-2.5">
-                <span className="max-w-[180px] truncate text-xs font-semibold text-amber-300">
+                <span className="max-w-[180px] truncate text-xs font-semibold text-[#1F3A33]">
                   {userEmail}
                 </span>
                 <form action={logout}>
                   <button
                     type="submit"
                     title="Выйти"
-                    className="rounded-xl border border-white/10 bg-white/5 p-2 text-zinc-400 transition hover:border-amber-500/40 hover:text-white"
+                    className="rounded-xl border border-[#D5CFC4] bg-white p-2 text-[#5C6460] transition hover:border-[#1F3A33] hover:text-[#1C242B]"
                   >
                     <LogOut className="h-4 w-4" />
                   </button>
@@ -121,7 +121,7 @@ export default async function DashboardLayout({
             ) : (
               <Link
                 href="/login"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-600 px-3.5 py-1.5 text-xs font-extrabold text-black shadow-md shadow-amber-500/15 transition hover:brightness-110"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#1F3A33] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition hover:bg-[#162B25]"
               >
                 <UserCheck className="h-3.5 w-3.5" />
                 <span>Личный кабинет / Вход</span>
@@ -131,11 +131,11 @@ export default async function DashboardLayout({
         </header>
 
         {/* Мобильная навигация */}
-        <div className="border-b border-amber-500/20 bg-[#0b0b10] px-3 py-2 md:hidden">
+        <div className="border-b border-[#E2DDD3] bg-[#FBF9F5] px-3 py-2 md:hidden">
           <SidebarNav horizontal />
         </div>
 
-        <main className="flex-1 p-4 sm:p-6 bg-gold-grid">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 bg-nordic-grid">{children}</main>
       </div>
     </div>
   );

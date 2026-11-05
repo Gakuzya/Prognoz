@@ -3,15 +3,13 @@
 import { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import {
-  Sparkles,
   Bot,
   BarChart3,
   FileText,
   RotateCcw,
-  Crown,
+  Compass,
   Rocket,
   ArrowLeft,
-  TrendingUp,
   Layers,
 } from "lucide-react";
 import AiChatClient, { AiAgentMode } from "./AiChatClient";
@@ -106,7 +104,6 @@ export default function DashboardHub({
     buildDefaultProject(company)
   );
 
-  // Загружаем сохраненный проект или переход с Первой страницы (Витрины /)
   useEffect(() => {
     try {
       const quickLaunchRaw = localStorage.getItem(QUICK_LAUNCH_KEY);
@@ -174,7 +171,7 @@ export default function DashboardHub({
         }
       }
     } catch {
-      // ignore storage errors
+      // ignore
     }
   }, [company]);
 
@@ -191,15 +188,15 @@ export default function DashboardHub({
     const channels =
       planData.channelAllocations && planData.channelAllocations.length > 0
         ? planData.channelAllocations.map((c) => ({
-          name: c.channel,
-          historicalCac: c.estimatedCac,
-          conversionRate: 3.2,
-        }))
+            name: c.channel,
+            historicalCac: c.estimatedCac,
+            conversionRate: 3.2,
+          }))
         : generatedResult.allocations.map((a) => ({
-          name: a.channel,
-          historicalCac: a.effectiveCac || 7500,
-          conversionRate: 3.2,
-        }));
+            name: a.channel,
+            historicalCac: a.effectiveCac || 7500,
+            conversionRate: 3.2,
+          }));
 
     const newProject: ActiveProjectState = {
       industry: generatedResult.industry || planData.industry || project.industry,
@@ -216,7 +213,6 @@ export default function DashboardHub({
     setProject(newProject);
   };
 
-  // Быстрое переключение сферы прямо из верхней золотой панели
   const handleQuickSphereSwitch = (sphereId: string) => {
     const sp = SPHERE_CATALOG.find((s) => s.id === sphereId);
     if (!sp) return;
@@ -264,38 +260,35 @@ export default function DashboardHub({
 
   return (
     <div className="space-y-5">
-      {/* 👑 ЗОЛОТОЙ КОМАНДНЫЙ ЦЕНТР АКТИВНОГО БИЗНЕС-ПРОЕКТА */}
-      <div className="relative overflow-hidden rounded-3xl border border-amber-500/35 bg-gradient-to-br from-[#12121a] via-[#0c0c12] to-[#1a1406] p-5 text-white shadow-2xl">
-        <div className="pointer-events-none absolute -right-12 -top-12 h-52 w-52 rounded-full bg-amber-500/15 blur-3xl" />
-        <div className="pointer-events-none absolute -left-12 -bottom-12 h-52 w-52 rounded-full bg-yellow-600/10 blur-3xl" />
-
+      {/* 🌿 СКАНДИНАВСКИЙ КОМАНДНЫЙ ЦЕНТР АКТИВНОГО БИЗНЕС-ПРОЕКТА */}
+      <div className="relative overflow-hidden rounded-3xl border border-[#E2DDD3] bg-white p-5 sm:p-6 text-[#1C242B] nordic-shadow">
         {/* Верхняя полоса связи Страницы 1 и Страницы 2 */}
-        <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3 text-xs">
+        <div className="relative mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-[#ECE9E2] pb-3 text-xs">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 font-bold text-amber-300 transition hover:bg-amber-500 hover:text-black"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#D5CFC4] bg-[#F7F6F2] px-3 py-1.5 font-semibold text-[#1C242B] transition hover:border-[#1F3A33] hover:bg-[#1F3A33] hover:text-white"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>На Главную Витрину (Страница 1)</span>
             </Link>
-            <span className="hidden sm:inline text-zinc-500">|</span>
-            <span className="hidden sm:inline-flex items-center gap-1.5 text-zinc-300 font-medium">
-              <Layers className="h-3.5 w-3.5 text-amber-400" />
+            <span className="hidden sm:inline text-[#D5CFC4]">|</span>
+            <span className="hidden sm:inline-flex items-center gap-1.5 text-[#5C6460] font-medium">
+              <Layers className="h-3.5 w-3.5 text-[#1F3A33]" />
               <span>Рабочий Терминал ИИ и Графиков (Страница 2)</span>
             </span>
           </div>
 
           {/* Быстрый селектор сферы бизнеса */}
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold text-amber-400">Быстрая смена сферы:</span>
+            <span className="text-[11px] font-semibold text-[#5C6460]">Сфера бизнеса:</span>
             <select
               value={
                 SPHERE_CATALOG.find((s) => s.name === project.industry)?.id ||
                 SPHERE_CATALOG[0].id
               }
               onChange={(e) => handleQuickSphereSwitch(e.target.value)}
-              className="rounded-xl border border-amber-500/40 bg-black/70 px-3 py-1.5 text-xs font-bold text-amber-200 outline-none focus:border-amber-400"
+              className="rounded-xl border border-[#D5CFC4] bg-[#F7F6F2] px-3 py-1.5 text-xs font-semibold text-[#1C242B] outline-none focus:border-[#1F3A33]"
             >
               {SPHERE_CATALOG.map((sp) => (
                 <option key={sp.id} value={sp.id}>
@@ -308,9 +301,9 @@ export default function DashboardHub({
               type="button"
               onClick={handleResetProject}
               title="Сбросить к базовым настройкам"
-              className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-zinc-300 transition hover:border-amber-500/40 hover:text-amber-300"
+              className="flex items-center gap-1 rounded-xl border border-[#D5CFC4] bg-white px-2.5 py-1.5 text-xs font-semibold text-[#5C6460] transition hover:border-[#1F3A33] hover:text-[#1C242B]"
             >
-              <RotateCcw className="h-3.5 w-3.5 text-amber-400" />
+              <RotateCcw className="h-3.5 w-3.5 text-[#1F3A33]" />
               <span className="hidden sm:inline">Сброс</span>
             </button>
           </div>
@@ -319,29 +312,28 @@ export default function DashboardHub({
         {/* Основная сводка по текущему продвигаемому бизнесу */}
         <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-start gap-3.5">
-            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25">
-              <Crown className="h-6 w-6" />
+            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#1F3A33] text-white shadow-sm">
+              <Compass className="h-6 w-6" />
               <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex h-3.5 w-3.5 rounded-full bg-emerald-500 ring-2 ring-[#0c0c12]"></span>
+                <span className="relative inline-flex h-3.5 w-3.5 rounded-full bg-[#2F7A5E] ring-2 ring-white"></span>
               </span>
             </div>
 
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">
-                  Продвигаемый бизнес-проект:
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#5C6460]">
+                  Активный бизнес-проект:
                 </span>
-                <span className="rounded-full border border-emerald-500/40 bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400">
+                <span className="rounded-full border border-[#1F3A33]/20 bg-[#EAF0ED] px-2.5 py-0.5 text-[10px] font-semibold text-[#1F3A33]">
                   6 графиков и ИИ синхронизированы
                 </span>
               </div>
 
-              <h1 className="mt-0.5 text-lg font-extrabold tracking-tight text-white sm:text-xl">
+              <h1 className="mt-0.5 text-lg font-bold tracking-tight text-[#1C242B] sm:text-xl">
                 {project.industry}
               </h1>
 
-              <p className="mt-1 text-xs text-zinc-400 line-clamp-1">
+              <p className="mt-1 text-xs text-[#5C6460] line-clamp-1">
                 УТП: {project.forecastResult.promotionStrategy?.positioningUsp || project.forecastResult.summary}
               </p>
             </div>
@@ -349,47 +341,47 @@ export default function DashboardHub({
 
           {/* 5 Мини-карточек экономики в реальном времени */}
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
-            <div className="rounded-2xl border border-white/10 bg-black/50 px-3.5 py-2.5">
-              <span className="text-[10px] uppercase tracking-wider text-zinc-400 block">
+            <div className="rounded-2xl border border-[#E2DDD3] bg-[#F7F6F2] px-3.5 py-2.5">
+              <span className="text-[10px] uppercase tracking-wider text-[#5C6460] block">
                 Старт (CAPEX)
               </span>
-              <span className="mt-0.5 block text-xs sm:text-sm font-extrabold text-white">
+              <span className="mt-0.5 block text-xs sm:text-sm font-bold text-[#1C242B]">
                 {formatMoney(project.openingBudget, project.currency)}
               </span>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-black/50 px-3.5 py-2.5">
-              <span className="text-[10px] uppercase tracking-wider text-zinc-400 block">
+            <div className="rounded-2xl border border-[#E2DDD3] bg-[#F7F6F2] px-3.5 py-2.5">
+              <span className="text-[10px] uppercase tracking-wider text-[#5C6460] block">
                 Реклама / мес
               </span>
-              <span className="mt-0.5 block text-xs sm:text-sm font-extrabold text-amber-300">
+              <span className="mt-0.5 block text-xs sm:text-sm font-bold text-[#1C242B]">
                 {formatMoney(project.adBudget, project.currency)}
               </span>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-black/50 px-3.5 py-2.5">
-              <span className="text-[10px] uppercase tracking-wider text-zinc-400 block">
+            <div className="rounded-2xl border border-[#E2DDD3] bg-[#F7F6F2] px-3.5 py-2.5">
+              <span className="text-[10px] uppercase tracking-wider text-[#5C6460] block">
                 Прогноз выручки
               </span>
-              <span className="mt-0.5 block text-xs sm:text-sm font-extrabold text-sky-300">
+              <span className="mt-0.5 block text-xs sm:text-sm font-bold text-[#3B6E8C]">
                 {formatMoney(project.forecastResult.totals.revenue, project.currency)}
               </span>
             </div>
 
-            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2.5">
-              <span className="text-[10px] uppercase tracking-wider text-emerald-300 block">
+            <div className="rounded-2xl border border-[#1F3A33]/25 bg-[#EAF0ED] px-3.5 py-2.5">
+              <span className="text-[10px] uppercase tracking-wider text-[#1F3A33] block">
                 Чистая прибыль
               </span>
-              <span className="mt-0.5 block text-xs sm:text-sm font-extrabold text-emerald-400">
+              <span className="mt-0.5 block text-xs sm:text-sm font-bold text-[#1F3A33]">
                 {formatMoney(project.forecastResult.totals.profit, project.currency)}
               </span>
             </div>
 
-            <div className="col-span-2 sm:col-span-1 rounded-2xl border border-amber-500/40 bg-amber-500/15 px-3.5 py-2.5">
-              <span className="text-[10px] uppercase tracking-wider text-amber-300 block">
+            <div className="col-span-2 sm:col-span-1 rounded-2xl border border-[#B85D3B]/30 bg-[#FAF2EE] px-3.5 py-2.5">
+              <span className="text-[10px] uppercase tracking-wider text-[#B85D3B] block">
                 ROI & Возврат
               </span>
-              <span className="mt-0.5 block text-xs sm:text-sm font-extrabold text-amber-300">
+              <span className="mt-0.5 block text-xs sm:text-sm font-bold text-[#B85D3B]">
                 +{project.forecastResult.totals.roi}% ({project.forecastResult.paybackMonths || 3.5} мес)
               </span>
             </div>
@@ -397,14 +389,15 @@ export default function DashboardHub({
         </div>
 
         {/* 🧭 4 КЛЮЧЕВЫХ МОДУЛЯ ПЛАТФОРМЫ */}
-        <div className="mt-5 grid grid-cols-2 gap-2 border-t border-white/10 pt-4 sm:grid-cols-4">
+        <div className="mt-5 grid grid-cols-2 gap-2 border-t border-[#ECE9E2] pt-4 sm:grid-cols-4">
           <button
             type="button"
             onClick={() => setActiveTab("chat")}
-            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${activeTab === "chat"
-              ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
-              : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
-              }`}
+            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-semibold transition-all ${
+              activeTab === "chat"
+                ? "bg-[#1F3A33] text-white shadow-sm"
+                : "border border-[#E2DDD3] bg-[#F7F6F2] text-[#5C6460] hover:border-[#1F3A33] hover:text-[#1C242B]"
+            }`}
           >
             <Bot className="h-4 w-4 shrink-0" />
             <span>1. ИИ-Штаб (5 Агентов)</span>
@@ -413,10 +406,11 @@ export default function DashboardHub({
           <button
             type="button"
             onClick={() => setActiveTab("simulator")}
-            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${activeTab === "simulator"
-              ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
-              : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
-              }`}
+            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-semibold transition-all ${
+              activeTab === "simulator"
+                ? "bg-[#1F3A33] text-white shadow-sm"
+                : "border border-[#E2DDD3] bg-[#F7F6F2] text-[#5C6460] hover:border-[#1F3A33] hover:text-[#1C242B]"
+            }`}
           >
             <BarChart3 className="h-4 w-4 shrink-0" />
             <span>2. Симулятор & 6 Графиков</span>
@@ -425,10 +419,11 @@ export default function DashboardHub({
           <button
             type="button"
             onClick={() => setActiveTab("promotion")}
-            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${activeTab === "promotion"
-              ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
-              : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
-              }`}
+            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-semibold transition-all ${
+              activeTab === "promotion"
+                ? "bg-[#1F3A33] text-white shadow-sm"
+                : "border border-[#E2DDD3] bg-[#F7F6F2] text-[#5C6460] hover:border-[#1F3A33] hover:text-[#1C242B]"
+            }`}
           >
             <Rocket className="h-4 w-4 shrink-0" />
             <span>3. Продвижение & Креативы</span>
@@ -437,10 +432,11 @@ export default function DashboardHub({
           <button
             type="button"
             onClick={() => setActiveTab("report")}
-            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${activeTab === "report"
-              ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
-              : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
-              }`}
+            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-semibold transition-all ${
+              activeTab === "report"
+                ? "bg-[#1F3A33] text-white shadow-sm"
+                : "border border-[#E2DDD3] bg-[#F7F6F2] text-[#5C6460] hover:border-[#1F3A33] hover:text-[#1C242B]"
+            }`}
           >
             <FileText className="h-4 w-4 shrink-0" />
             <span>4. Инвест-Отчёт & PDF</span>
@@ -448,7 +444,7 @@ export default function DashboardHub({
         </div>
       </div>
 
-      {/* 🚀 СОДЕРЖИМОЕ АКТИВНОГО МОДУЛЯ */}
+      {/* СОДЕРЖИМОЕ АКТИВНОГО МОДУЛЯ */}
       <div>
         {activeTab === "chat" && (
           <AiChatClient
@@ -510,17 +506,17 @@ export default function DashboardHub({
 
         {activeTab === "report" && (
           <div className="space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-amber-500/30 bg-[#101016] p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-[#E2DDD3] bg-white p-5 nordic-shadow">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[#5C6460]">
                   Готовый Меморандум для Инвестора и Руководства
                 </span>
-                <h2 className="mt-1 text-lg font-extrabold text-white">
+                <h2 className="mt-1 text-lg font-bold text-[#1C242B]">
                   Финансово-маркетинговый отчёт: {project.industry}
                 </h2>
               </div>
               <div className="flex items-center gap-2">
-                <span className="rounded-xl border border-emerald-500/30 bg-emerald-500/15 px-3 py-1.5 text-xs font-extrabold text-emerald-400">
+                <span className="rounded-xl border border-[#1F3A33]/25 bg-[#EAF0ED] px-3 py-1.5 text-xs font-bold text-[#1F3A33]">
                   Прогноз ROI +{project.forecastResult.totals.roi}%
                 </span>
               </div>

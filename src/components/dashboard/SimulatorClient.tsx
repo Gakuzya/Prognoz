@@ -12,7 +12,7 @@ import {
   Zap,
   Info,
   MapPin,
-  Crown,
+  Compass,
 } from "lucide-react";
 import ResultsView from "./ResultsView";
 import AiCopilot from "./AiCopilot";
@@ -106,7 +106,6 @@ export default function SimulatorClient({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Всегда показываем готовые графики (либо переданные извне, либо мгновенно рассчитанные по текущей сфере)
   const [result, setResult] = useState<ForecastResult>(() => {
     if (externalResult) return externalResult;
     return convertPlanDataToForecastResult(
@@ -145,7 +144,6 @@ export default function SimulatorClient({
     }
   }, [externalParams]);
 
-  // Выбор сферы бизнеса из каталога — мгновенно обновляет параметры и перестраивает все 6 графиков!
   const handleSphereSelect = (sphereId: string) => {
     setSelectedSphereId(sphereId);
     const preset = SPHERE_CATALOG.find((p) => p.id === sphereId);
@@ -341,27 +339,27 @@ export default function SimulatorClient({
     <div className="space-y-6">
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
         {/* ЛЕВАЯ КОЛОНКА: ПУЛЬТ УПРАВЛЕНИЯ ПАРАМЕТРАМИ БИЗНЕСА (4 колонки) */}
-        <div className="rounded-3xl border border-amber-500/25 bg-[#101016] p-5 shadow-2xl lg:col-span-4">
-          <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="rounded-3xl border border-[#E2DDD3] bg-white p-5 nordic-shadow lg:col-span-4">
+          <div className="mb-4 flex items-center justify-between border-b border-[#ECE9E2] pb-3">
             <div className="flex items-center gap-2">
-              <Crown className="h-4 w-4 text-amber-400" />
-              <span className="text-xs font-extrabold uppercase tracking-wider text-white">
+              <Compass className="h-4 w-4 text-[#1F3A33]" />
+              <span className="text-xs font-extrabold uppercase tracking-wider text-[#1C242B]">
                 Конфигуратор Проекта
               </span>
             </div>
-            <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-300">
+            <span className="rounded-full bg-[#EAF0ED] px-2 py-0.5 text-[10px] font-bold text-[#1F3A33]">
               Hill MMM v3.0
             </span>
           </div>
 
           {/* Переключатель: Быстрый / Профессиональный */}
-          <div className="mb-5 grid grid-cols-2 rounded-xl border border-white/10 bg-black/50 p-1 text-xs font-bold">
+          <div className="mb-5 grid grid-cols-2 rounded-xl border border-[#E2DDD3] bg-[#F2EFE9] p-1 text-xs font-bold">
             <button
               type="button"
               onClick={() => setMode("simple")}
               className={`flex items-center justify-center gap-1.5 rounded-lg py-2 transition-all ${mode === "simple"
-                ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
-                : "text-zinc-400 hover:text-white"
+                ? "bg-[#1F3A33] text-white shadow-sm"
+                : "text-[#5C6460] hover:text-[#1C242B]"
                 }`}
             >
               <Zap className="h-3.5 w-3.5" />
@@ -372,8 +370,8 @@ export default function SimulatorClient({
               type="button"
               onClick={() => setMode("pro")}
               className={`flex items-center justify-center gap-1.5 rounded-lg py-2 transition-all ${mode === "pro"
-                ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
-                : "text-zinc-400 hover:text-white"
+                ? "bg-[#1F3A33] text-white shadow-sm"
+                : "text-[#5C6460] hover:text-[#1C242B]"
                 }`}
             >
               <Sliders className="h-3.5 w-3.5" />
@@ -384,13 +382,13 @@ export default function SimulatorClient({
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Выбор сферы из 8 эталонов */}
             <div>
-              <label className="block text-xs font-bold text-amber-300 mb-1.5">
+              <label className="block text-xs font-bold text-[#1F3A33] mb-1.5">
                 1. Выберите сферу продвигаемого бизнеса:
               </label>
               <select
                 value={selectedSphereId}
                 onChange={(e) => handleSphereSelect(e.target.value)}
-                className="w-full rounded-xl border border-amber-500/30 bg-[#181822] px-3.5 py-2.5 text-xs font-bold text-white outline-none transition focus:border-amber-400"
+                className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3.5 py-2.5 text-xs font-bold text-[#1C242B] outline-none transition focus:border-[#1F3A33]"
               >
                 {SPHERE_CATALOG.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -402,7 +400,7 @@ export default function SimulatorClient({
 
             {/* Точное название бизнеса / ниши */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1">
+              <label className="block text-xs font-semibold text-[#5C6460] mb-1">
                 Название вашего направления / ниши
               </label>
               <input
@@ -410,14 +408,14 @@ export default function SimulatorClient({
                 value={customIndustryName}
                 onChange={(e) => setCustomIndustryName(e.target.value)}
                 placeholder="Например: Детейлинг-студия в Алматы"
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3.5 py-2 text-xs font-semibold text-white outline-none focus:border-amber-400"
+                className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3.5 py-2 text-xs font-semibold text-[#1C242B] outline-none focus:border-[#1F3A33]"
               />
             </div>
 
             {/* Бюджеты: Реклама и Открытие */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] font-semibold text-zinc-300 mb-1">
+                <label className="block text-[11px] font-semibold text-[#5C6460] mb-1">
                   Реклама в мес ({company.currency})
                 </label>
                 <input
@@ -427,12 +425,12 @@ export default function SimulatorClient({
                   value={totalBudget}
                   onChange={(e) => setTotalBudget(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-amber-500/30 bg-black/60 px-3 py-2 text-sm font-extrabold text-amber-300 outline-none focus:border-amber-400"
+                  className="w-full rounded-xl border border-[#D5DFDA] bg-[#EAF0ED]/60 px-3 py-2 text-sm font-extrabold text-[#1F3A33] outline-none focus:border-[#1F3A33]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-zinc-300 mb-1">
+                <label className="block text-[11px] font-semibold text-[#5C6460] mb-1">
                   Капитал старта ({company.currency})
                 </label>
                 <input
@@ -442,16 +440,16 @@ export default function SimulatorClient({
                   value={openingBudget}
                   onChange={(e) => setOpeningBudget(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-white/15 bg-black/60 px-3 py-2 text-sm font-bold text-white outline-none focus:border-amber-400"
+                  className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 text-sm font-bold text-[#1C242B] outline-none focus:border-[#1F3A33]"
                 />
               </div>
             </div>
 
             {/* Быстрый слайдер рекламного бюджета */}
-            <div className="rounded-xl border border-white/10 bg-black/40 p-3">
-              <div className="flex justify-between text-[11px] text-zinc-400 mb-1">
+            <div className="rounded-xl border border-[#E2DDD3] bg-[#FBF9F5] p-3">
+              <div className="flex justify-between text-[11px] text-[#5C6460] mb-1">
                 <span>Быстрая шкала рекламы:</span>
-                <span className="font-bold text-amber-300">
+                <span className="font-bold text-[#1F3A33]">
                   {Number(totalBudget).toLocaleString("ru-KZ")} {company.currency}
                 </span>
               </div>
@@ -462,9 +460,9 @@ export default function SimulatorClient({
                 step={50000}
                 value={Math.min(5000000, Math.max(100000, Number(totalBudget) || 500000))}
                 onChange={(e) => setTotalBudget(Number(e.target.value))}
-                className="w-full accent-amber-400 cursor-pointer"
+                className="w-full accent-[#1F3A33] cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] text-zinc-500 mt-0.5">
+              <div className="flex justify-between text-[10px] text-[#7A827E] mt-0.5">
                 <span>100 тыс ₸</span>
                 <span>1.5 млн ₸</span>
                 <span>5 млн ₸</span>
@@ -474,7 +472,7 @@ export default function SimulatorClient({
             {/* Средний чек и Маржинальность */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] font-semibold text-zinc-300 mb-1">
+                <label className="block text-[11px] font-semibold text-[#5C6460] mb-1">
                   Средний чек ({company.currency})
                 </label>
                 <input
@@ -483,12 +481,12 @@ export default function SimulatorClient({
                   value={avgCheck}
                   onChange={(e) => setAvgCheck(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 text-xs font-bold text-white outline-none focus:border-amber-400"
+                  className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 text-xs font-bold text-[#1C242B] outline-none focus:border-[#1F3A33]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-zinc-300 mb-1">
+                <label className="block text-[11px] font-semibold text-[#5C6460] mb-1">
                   Маржинальность (%)
                 </label>
                 <input
@@ -498,17 +496,17 @@ export default function SimulatorClient({
                   value={targetMargin}
                   onChange={(e) => setTargetMargin(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 text-xs font-bold text-white outline-none focus:border-amber-400"
+                  className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 text-xs font-bold text-[#1C242B] outline-none focus:border-[#1F3A33]"
                 />
               </div>
             </div>
 
             {mode === "simple" && (
-              <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 text-xs leading-relaxed text-zinc-300">
+              <div className="rounded-xl border border-[#D5DFDA] bg-[#EAF0ED]/70 p-3 text-xs leading-relaxed text-[#5C6460]">
                 <div className="flex items-start gap-2">
-                  <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
+                  <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#1F3A33]" />
                   <div>
-                    <span className="font-bold text-amber-300">Авто-калибровка ниши: </span>
+                    <span className="font-bold text-[#1F3A33]">Авто-калибровка ниши: </span>
                     Для сферы «{customIndustryName}» подключены {channels.length} ключевых канала с реальными бенчмарками CAC и конверсии.
                   </div>
                 </div>
@@ -517,10 +515,10 @@ export default function SimulatorClient({
 
             {/* ПРОФЕССИОНАЛЬНЫЙ РЕЖИМ: Филиал, LTV и детальная настройка каждого канала */}
             {mode === "pro" && (
-              <div className="space-y-4 border-t border-white/10 pt-3">
+              <div className="space-y-4 border-t border-[#ECE9E2] pt-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-zinc-300 mb-1">
+                    <label className="block text-[11px] font-semibold text-[#5C6460] mb-1">
                       LTV клиента ({company.currency})
                     </label>
                     <input
@@ -528,19 +526,19 @@ export default function SimulatorClient({
                       min="1000"
                       value={ltv}
                       onChange={(e) => setLtv(e.target.value)}
-                      className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 text-xs font-bold text-white outline-none focus:border-amber-400"
+                      className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 text-xs font-bold text-[#1C242B] outline-none focus:border-[#1F3A33]"
                     />
                   </div>
 
                   <div>
-                    <label className="flex items-center gap-1 text-[11px] font-semibold text-zinc-300 mb-1">
-                      <MapPin className="h-3 w-3 text-amber-400" />
+                    <label className="flex items-center gap-1 text-[11px] font-semibold text-[#5C6460] mb-1">
+                      <MapPin className="h-3 w-3 text-[#1F3A33]" />
                       Филиал сети
                     </label>
                     <select
                       value={selectedBranchId}
                       onChange={(e) => setSelectedBranchId(e.target.value)}
-                      className="w-full rounded-xl border border-white/15 bg-[#181822] px-2.5 py-2 text-xs text-white outline-none focus:border-amber-400"
+                      className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-2.5 py-2 text-xs text-[#1C242B] outline-none focus:border-[#1F3A33]"
                     >
                       <option value="">Вся сеть / Головной</option>
                       {branches.map((b) => (
@@ -555,14 +553,14 @@ export default function SimulatorClient({
                 {/* Список каналов трафика */}
                 <div>
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1F3A33]">
                       Каналы продвижения ({channels.length})
                     </span>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => handleSphereSelect(selectedSphereId)}
-                        className="flex items-center gap-1 text-[11px] text-zinc-400 hover:text-white"
+                        className="flex items-center gap-1 text-[11px] text-[#5C6460] hover:text-[#1C242B]"
                       >
                         <RotateCcw className="h-3 w-3" />
                         Сброс
@@ -570,7 +568,7 @@ export default function SimulatorClient({
                       <button
                         type="button"
                         onClick={handleAddChannel}
-                        className="inline-flex items-center gap-1 text-xs font-bold text-amber-400 hover:text-amber-300"
+                        className="inline-flex items-center gap-1 text-xs font-bold text-[#1F3A33] hover:text-[#162B25]"
                       >
                         <Plus className="h-3.5 w-3.5" />
                         Добавить
@@ -582,7 +580,7 @@ export default function SimulatorClient({
                     {channels.map((channel, idx) => (
                       <div
                         key={idx}
-                        className="rounded-xl border border-white/10 bg-black/40 p-2.5"
+                        className="rounded-xl border border-[#E2DDD3] bg-[#FBF9F5] p-2.5"
                       >
                         <div className="flex items-center justify-between gap-2">
                           <input
@@ -592,13 +590,13 @@ export default function SimulatorClient({
                               handleChannelChange(idx, "name", e.target.value)
                             }
                             required
-                            className="w-full bg-transparent text-xs font-bold text-white outline-none"
+                            className="w-full bg-transparent text-xs font-bold text-[#1C242B] outline-none"
                           />
                           {channels.length > 1 && (
                             <button
                               type="button"
                               onClick={() => handleRemoveChannel(idx)}
-                              className="text-zinc-500 hover:text-rose-400"
+                              className="text-[#7A827E] hover:text-[#B85D3B]"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
@@ -607,7 +605,7 @@ export default function SimulatorClient({
 
                         <div className="mt-2 grid grid-cols-2 gap-2">
                           <div>
-                            <span className="text-[10px] text-zinc-400">
+                            <span className="text-[10px] text-[#5C6460]">
                               Базовый CAC ({company.currency})
                             </span>
                             <input
@@ -619,11 +617,11 @@ export default function SimulatorClient({
                                 handleChannelChange(idx, "historicalCac", e.target.value)
                               }
                               required
-                              className="mt-0.5 w-full rounded-lg border border-white/10 bg-[#14141d] px-2 py-1 text-xs text-amber-300 font-semibold outline-none"
+                              className="mt-0.5 w-full rounded-lg border border-[#D8D2C5] bg-white px-2 py-1 text-xs text-[#1F3A33] font-semibold outline-none"
                             />
                           </div>
                           <div>
-                            <span className="text-[10px] text-zinc-400">
+                            <span className="text-[10px] text-[#5C6460]">
                               Конверсия (%)
                             </span>
                             <input
@@ -636,7 +634,7 @@ export default function SimulatorClient({
                                 handleChannelChange(idx, "conversionRate", e.target.value)
                               }
                               required
-                              className="mt-0.5 w-full rounded-lg border border-white/10 bg-[#14141d] px-2 py-1 text-xs text-emerald-300 font-semibold outline-none"
+                              className="mt-0.5 w-full rounded-lg border border-[#D8D2C5] bg-white px-2 py-1 text-xs text-[#3B6E8C] font-semibold outline-none"
                             />
                           </div>
                         </div>
@@ -648,8 +646,8 @@ export default function SimulatorClient({
             )}
 
             {error && (
-              <div className="flex items-start gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-300">
-                <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
+              <div className="flex items-start gap-2 rounded-xl border border-[#E6CFC4] bg-[#FAF2EE] p-3 text-xs text-[#B85D3B]">
+                <AlertCircle className="h-4 w-4 shrink-0 text-[#B85D3B]" />
                 <span>{error}</span>
               </div>
             )}
@@ -657,7 +655,7 @@ export default function SimulatorClient({
             <button
               type="submit"
               disabled={loading}
-              className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 py-3.5 text-xs font-extrabold uppercase tracking-wider text-black shadow-lg shadow-amber-500/20 transition-all hover:brightness-110 active:scale-98 disabled:opacity-60"
+              className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#1F3A33] py-3.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#162B25] active:scale-98 disabled:opacity-60"
             >
               {loading ? (
                 <>

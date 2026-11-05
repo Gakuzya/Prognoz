@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import {
   Bot,
-  Sparkles,
   Send,
   Loader2,
   Key,
@@ -11,7 +10,7 @@ import {
   ArrowRight,
   Trash2,
   ExternalLink,
-  Crown,
+  Compass,
   Video,
   MessageSquare,
   ShieldAlert,
@@ -67,14 +66,14 @@ const AGENT_MODES: {
   id: AiAgentMode;
   label: string;
   shortDesc: string;
-  icon: typeof Crown;
+  icon: typeof Compass;
   promptPrefix: string;
 }[] = [
   {
     id: "full_360",
     label: "1. Разбор Бизнеса 360°",
     shortDesc: "УТП + Трафик + Окупаемость",
-    icon: Crown,
+    icon: Compass,
     promptPrefix: "Разработай полный комплексный бизнес-план 360°, стратегию продвижения, медиаплан и расчет окупаемости для сферы:",
   },
   {
@@ -116,10 +115,10 @@ function createMsgId(prefix = "msg") {
 const DEFAULT_WELCOME_MSG: Message = {
   id: "welcome",
   role: "assistant",
-  content: `👑 **Добро пожаловать в ИИ-Штаб Управления и Продвижения Бизнеса AdForecast Sovereign AI!**
+  content: `🧭 **Добро пожаловать в ИИ-Штаб Управления и Продвижения Бизнеса AdForecast Nordic AI!**
 
 В вашем распоряжении **5 специализированных ИИ-директоров**, которые полностью оцифруют и упакуют ваш бизнес:
-1. 👑 **ИИ-Архитектор Бизнеса**: позиционирование, УТП, сегменты ЦА и дорожная карта открытия.
+1. 🧭 **ИИ-Архитектор Бизнеса**: позиционирование, УТП, сегменты ЦА и дорожная карта открытия.
 2. 🎯 **ИИ-Директор по Трафику**: медиамикс (Instagram Reels, 2GIS, TikTok Ads, Google.kz, Kaspi), прогноз лидов и CAC.
 3. 🎬 **ИИ-Креативный Продюсер**: готовые сценарии видеороликов, заголовки объявлений и триггерные офферы.
 4. 🤝 **ИИ-Директор Продаж (CRO)**: воронка в WhatsApp, скрипты первого касания, дожим и возврат базы (LTV).
@@ -127,7 +126,7 @@ const DEFAULT_WELCOME_MSG: Message = {
 
 Напишите вашу задачу в свободной форме или выберите **Сферу бизнеса** и **Режим ИИ** ниже!`,
   createdAt: "2026-01-01T00:00:00.000Z",
-  provider: "Sovereign Multi-Agent AI 3.0",
+  provider: "Nordic Multi-Agent AI 3.0",
 };
 
 function extractStructuredData(text: string): StructuredPlanData | null {
@@ -206,7 +205,6 @@ export default function AiChatClient({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
-  // Реакция на внешний триггер (например, переход с Первой страницы или из вкладки Продвижение)
   useEffect(() => {
     if (
       externalPromptTrigger &&
@@ -352,22 +350,22 @@ export default function AiChatClient({
   return (
     <div className="flex flex-col gap-3.5 font-sans">
       {/* 1. ВЕРХНЯЯ ПАНЕЛЬ ИИ-ШТАБА С ВЫБОРОМ 5 ИИ-ФУНКЦИЙ */}
-      <div className="rounded-2xl border border-amber-500/25 bg-[#101016] p-4 shadow-xl">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3.5">
+      <div className="rounded-2xl border border-[#E2DDD3] bg-white p-4 nordic-shadow">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ECE9E2] pb-3.5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1F3A33] text-white shadow-sm">
               <Bot className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-extrabold text-white">
+                <h2 className="text-base font-extrabold text-[#1C242B]">
                   Мультиагентный ИИ-Терминал Обработки Бизнеса
                 </h2>
-                <span className="rounded-full border border-amber-500/40 bg-amber-500/15 px-2.5 py-0.5 text-[10px] font-bold text-amber-300">
+                <span className="rounded-full border border-[#D5DFDA] bg-[#EAF0ED] px-2.5 py-0.5 text-[10px] font-bold text-[#1F3A33]">
                   5 AI-ДИРЕКТОРОВ
                 </span>
               </div>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-[#5C6460]">
                 Выберите нужную функцию ИИ ниже — система мгновенно перестроит стратегию и все 6 графиков
               </p>
             </div>
@@ -377,15 +375,15 @@ export default function AiChatClient({
             <button
               type="button"
               onClick={() => setIsKeyModalOpen(true)}
-              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition hover:border-amber-500/40 hover:text-amber-300"
+              className="flex items-center gap-2 rounded-xl border border-[#E2DDD3] bg-[#FBF9F5] px-3 py-1.5 text-xs font-semibold text-[#5C6460] transition hover:border-[#1F3A33]/40 hover:text-[#1F3A33]"
             >
               <span
                 className={`h-2 w-2 rounded-full ${
-                  groqKey ? "bg-emerald-400 animate-pulse" : "bg-amber-400"
+                  groqKey ? "bg-[#1F3A33] animate-pulse" : "bg-[#B85D3B]"
                 }`}
               />
-              <span>{groqKey ? `Groq Cloud` : "Sovereign AI 3.0"}</span>
-              <Key className="h-3.5 w-3.5 text-amber-400" />
+              <span>{groqKey ? `Groq Cloud` : "Nordic AI 3.0"}</span>
+              <Key className="h-3.5 w-3.5 text-[#1F3A33]" />
             </button>
 
             <button
@@ -393,18 +391,18 @@ export default function AiChatClient({
               onClick={() => setIsParamsOpen(!isParamsOpen)}
               className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition ${
                 isParamsOpen
-                  ? "border-amber-400 bg-amber-500/20 text-amber-300"
-                  : "border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40"
+                  ? "border-[#1F3A33] bg-[#EAF0ED] text-[#1F3A33]"
+                  : "border-[#E2DDD3] bg-[#FBF9F5] text-[#5C6460] hover:border-[#1F3A33]/40 hover:text-[#1C242B]"
               }`}
             >
-              <Sliders className="h-3.5 w-3.5 text-amber-400" />
+              <Sliders className="h-3.5 w-3.5 text-[#1F3A33]" />
               <span>Параметры бизнеса</span>
             </button>
 
             <button
               type="button"
               onClick={handleClearHistory}
-              className="rounded-xl border border-white/10 bg-white/5 p-2 text-zinc-400 transition hover:border-rose-500/40 hover:text-rose-400"
+              className="rounded-xl border border-[#E2DDD3] bg-[#FBF9F5] p-2 text-[#7A827E] transition hover:border-[#B85D3B] hover:text-[#B85D3B]"
               title="Очистить историю"
             >
               <Trash2 className="h-4 w-4" />
@@ -412,9 +410,9 @@ export default function AiChatClient({
           </div>
         </div>
 
-        {/* 5 КНОПОК СПЕЦИАЛИЗИРОВАННЫХ ИИ-ФУНКЦИЙ (В 1 клик запускают нужного ИИ-директора) */}
+        {/* 5 КНОПОК СПЕЦИАЛИЗИРОВАННЫХ ИИ-ФУНКЦИЙ */}
         <div className="mt-3.5">
-          <span className="mb-2 block text-[11px] font-bold uppercase tracking-wider text-amber-400/90">
+          <span className="mb-2 block text-[11px] font-bold uppercase tracking-wider text-[#1F3A33]">
             Выберите режим работы ИИ (нажмите для мгновенной генерации по вашему бизнесу):
           </span>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">
@@ -429,21 +427,21 @@ export default function AiChatClient({
                   onClick={() => handleRunAgentFunction(m)}
                   className={`group flex flex-col justify-between rounded-xl border p-2.5 text-left transition-all ${
                     isActive
-                      ? "border-amber-400 bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-transparent text-white shadow-md shadow-amber-500/10"
-                      : "border-white/10 bg-black/40 text-zinc-300 hover:border-amber-500/40 hover:bg-white/[0.04]"
+                      ? "border-[#1F3A33] bg-[#EAF0ED] text-[#1C242B] shadow-sm"
+                      : "border-[#E2DDD3] bg-[#FBF9F5] text-[#5C6460] hover:border-[#1F3A33]/40 hover:bg-white"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold text-white group-hover:text-amber-300">
+                    <span className="text-xs font-extrabold text-[#1C242B] group-hover:text-[#1F3A33]">
                       {m.label}
                     </span>
                     <Icon
                       className={`h-4 w-4 shrink-0 ${
-                        isActive ? "text-amber-400" : "text-zinc-500 group-hover:text-amber-400"
+                        isActive ? "text-[#1F3A33]" : "text-[#7A827E] group-hover:text-[#1F3A33]"
                       }`}
                     />
                   </div>
-                  <span className="mt-1 text-[10px] text-zinc-400">{m.shortDesc}</span>
+                  <span className="mt-1 text-[10px] text-[#5C6460]">{m.shortDesc}</span>
                 </button>
               );
             })}
@@ -453,64 +451,64 @@ export default function AiChatClient({
 
       {/* Раскрывающаяся панель точной настройки параметров бизнеса */}
       {isParamsOpen && (
-        <div className="rounded-2xl border border-amber-500/30 bg-[#12121a] p-4 shadow-lg">
+        <div className="rounded-2xl border border-[#E2DDD3] bg-white p-4 nordic-shadow">
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#1F3A33]">
               Финансовый паспорт вашего проекта
             </span>
-            <span className="text-[11px] text-zinc-400">
+            <span className="text-[11px] text-[#5C6460]">
               Все 5 ИИ-агентов используют эти цифры для расчетов
             </span>
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-6 text-xs">
             <div className="sm:col-span-2">
-              <label className="block text-zinc-400 font-medium mb-1">Сфера бизнеса / Ниша</label>
+              <label className="block text-[#5C6460] font-medium mb-1">Сфера бизнеса / Ниша</label>
               <input
                 type="text"
                 value={context.industry}
                 onChange={(e) => setContext({ ...context, industry: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 font-semibold text-white outline-none focus:border-amber-400"
+                className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 font-semibold text-[#1C242B] outline-none focus:border-[#1F3A33]"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">Капитал старта (₸)</label>
+              <label className="block text-[#5C6460] font-medium mb-1">Капитал старта (₸)</label>
               <input
                 type="number"
                 value={context.openingBudget}
                 onChange={(e) => setContext({ ...context, openingBudget: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 font-semibold text-white outline-none focus:border-amber-400"
+                className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 font-semibold text-[#1C242B] outline-none focus:border-[#1F3A33]"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">Реклама в мес (₸)</label>
+              <label className="block text-[#5C6460] font-medium mb-1">Реклама в мес (₸)</label>
               <input
                 type="number"
                 value={context.adBudget}
                 onChange={(e) => setContext({ ...context, adBudget: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 font-semibold text-white outline-none focus:border-amber-400"
+                className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 font-semibold text-[#1C242B] outline-none focus:border-[#1F3A33]"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">Средний чек (₸)</label>
+              <label className="block text-[#5C6460] font-medium mb-1">Средний чек (₸)</label>
               <input
                 type="number"
                 value={context.avgCheck}
                 onChange={(e) => setContext({ ...context, avgCheck: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 font-semibold text-white outline-none focus:border-amber-400"
+                className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 font-semibold text-[#1C242B] outline-none focus:border-[#1F3A33]"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">Город / Локация</label>
+              <label className="block text-[#5C6460] font-medium mb-1">Город / Локация</label>
               <input
                 type="text"
                 value={context.location}
                 onChange={(e) => setContext({ ...context, location: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 font-semibold text-white outline-none focus:border-amber-400"
+                className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 font-semibold text-[#1C242B] outline-none focus:border-[#1F3A33]"
               />
             </div>
           </div>
@@ -519,7 +517,7 @@ export default function AiChatClient({
 
       {/* Быстрый выбор из 8 готовых сфер бизнеса */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400 shrink-0">
+        <span className="text-[11px] font-bold uppercase tracking-wider text-[#1F3A33] shrink-0">
           Сферы бизнеса:
         </span>
         {SPHERE_CATALOG.map((sp) => (
@@ -530,8 +528,8 @@ export default function AiChatClient({
             onClick={() => handleSelectSphereQuick(sp)}
             className={`flex items-center gap-1.5 shrink-0 rounded-xl border px-3 py-1.5 text-xs font-semibold transition active:scale-95 ${
               context.industry === sp.name
-                ? "border-amber-400 bg-amber-500/20 text-amber-200"
-                : "border-white/10 bg-[#121218] text-zinc-300 hover:border-amber-500/40 hover:text-white"
+                ? "border-[#1F3A33] bg-[#EAF0ED] text-[#1F3A33]"
+                : "border-[#E2DDD3] bg-white text-[#5C6460] hover:border-[#1F3A33]/40 hover:text-[#1C242B]"
             }`}
           >
             <span>{sp.icon}</span>
@@ -541,7 +539,7 @@ export default function AiChatClient({
       </div>
 
       {/* Зона сообщений ИИ-чата */}
-      <div className="h-[460px] overflow-y-auto rounded-3xl border border-white/10 bg-[#0b0b10] p-4 sm:p-5 space-y-4 shadow-inner">
+      <div className="h-[460px] overflow-y-auto rounded-3xl border border-[#E2DDD3] bg-[#FBF9F5] p-4 sm:p-5 space-y-4 shadow-inner">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -552,18 +550,18 @@ export default function AiChatClient({
             <div
               className={`max-w-4xl rounded-2xl p-4 sm:p-5 text-sm ${
                 msg.role === "user"
-                  ? "bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-semibold rounded-br-xs shadow-lg shadow-amber-500/10"
-                  : "border border-amber-500/20 bg-[#13131b] text-zinc-100 rounded-bl-xs shadow-xl"
+                  ? "bg-[#1F3A33] text-white font-semibold rounded-br-xs shadow-sm"
+                  : "border border-[#E2DDD3] bg-white text-[#1C242B] rounded-bl-xs nordic-shadow"
               }`}
             >
               {msg.role === "assistant" && (
-                <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2 text-[11px]">
-                  <div className="flex items-center gap-1.5 font-bold text-amber-400">
-                    <Crown className="h-3.5 w-3.5" />
+                <div className="mb-3 flex items-center justify-between border-b border-[#ECE9E2] pb-2 text-[11px]">
+                  <div className="flex items-center gap-1.5 font-bold text-[#1F3A33]">
+                    <Compass className="h-3.5 w-3.5" />
                     <span>Стратегический Меморандум ИИ-Штаба</span>
                   </div>
                   {msg.provider && (
-                    <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-amber-300">
+                    <span className="rounded-full border border-[#D5DFDA] bg-[#EAF0ED] px-2.5 py-0.5 text-[10px] font-semibold text-[#1F3A33]">
                       {msg.model || msg.provider}
                     </span>
                   )}
@@ -578,41 +576,41 @@ export default function AiChatClient({
 
               {/* Интерактивная карточка оцифрованного проекта в ответе ИИ */}
               {msg.parsedData && (
-                <div className="mt-5 space-y-4 rounded-2xl border border-amber-500/30 bg-black/50 p-4">
+                <div className="mt-5 space-y-4 rounded-2xl border border-[#E2DDD3] bg-[#FBF9F5] p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-amber-300">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-[#1F3A33]">
                       📊 Сводка оцифрованного проекта: {msg.parsedData.industry}
                     </span>
-                    <span className="rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-0.5 text-xs font-extrabold text-emerald-400">
+                    <span className="rounded-full border border-[#D5DFDA] bg-[#EAF0ED] px-3 py-0.5 text-xs font-extrabold text-[#1F3A33]">
                       Прогноз ROI +{msg.parsedData.estimatedRoi}%
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-                    <div className="rounded-xl border border-white/10 bg-[#14141c] p-3">
-                      <span className="text-[10px] text-zinc-400 block">Безубыточность</span>
-                      <p className="mt-0.5 font-extrabold text-white text-sm">
+                    <div className="rounded-xl border border-[#E2DDD3] bg-white p-3">
+                      <span className="text-[10px] text-[#7A827E] block">Безубыточность</span>
+                      <p className="mt-0.5 font-extrabold text-[#1C242B] text-sm">
                         {msg.parsedData.breakEvenSales} продаж
                       </p>
                     </div>
 
-                    <div className="rounded-xl border border-white/10 bg-[#14141c] p-3">
-                      <span className="text-[10px] text-zinc-400 block">Прогноз выручки</span>
-                      <p className="mt-0.5 font-extrabold text-amber-400 text-sm">
+                    <div className="rounded-xl border border-[#E2DDD3] bg-white p-3">
+                      <span className="text-[10px] text-[#7A827E] block">Прогноз выручки</span>
+                      <p className="mt-0.5 font-extrabold text-[#3B6E8C] text-sm">
                         {formatMoney(msg.parsedData.estimatedRevenue || 0, msg.parsedData.currency)}
                       </p>
                     </div>
 
-                    <div className="rounded-xl border border-white/10 bg-[#14141c] p-3">
-                      <span className="text-[10px] text-zinc-400 block">Чистая прибыль</span>
-                      <p className="mt-0.5 font-extrabold text-emerald-400 text-sm">
+                    <div className="rounded-xl border border-[#E2DDD3] bg-white p-3">
+                      <span className="text-[10px] text-[#7A827E] block">Чистая прибыль</span>
+                      <p className="mt-0.5 font-extrabold text-[#1F3A33] text-sm">
                         {formatMoney(msg.parsedData.estimatedProfit || 0, msg.parsedData.currency)}
                       </p>
                     </div>
 
-                    <div className="rounded-xl border border-white/10 bg-[#14141c] p-3">
-                      <span className="text-[10px] text-zinc-400 block">Рекламный бюджет</span>
-                      <p className="mt-0.5 font-extrabold text-white text-sm">
+                    <div className="rounded-xl border border-[#E2DDD3] bg-white p-3">
+                      <span className="text-[10px] text-[#7A827E] block">Рекламный бюджет</span>
+                      <p className="mt-0.5 font-extrabold text-[#1C242B] text-sm">
                         {formatMoney(msg.parsedData.adBudget || 0, msg.parsedData.currency)}
                       </p>
                     </div>
@@ -623,7 +621,7 @@ export default function AiChatClient({
                     <button
                       type="button"
                       onClick={() => (onOpenCharts ? onOpenCharts(msg.parsedData || undefined) : null)}
-                      className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 px-4 py-2.5 text-xs font-extrabold text-black shadow-lg shadow-amber-500/20 transition hover:brightness-110 active:scale-95"
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#1F3A33] px-4 py-2.5 text-xs font-extrabold text-white shadow-sm transition hover:bg-[#162B25] active:scale-95"
                     >
                       <BarChart3 className="h-4 w-4" />
                       <span>Открыть все 6 графиков («{msg.parsedData.industry}»)</span>
@@ -634,7 +632,7 @@ export default function AiChatClient({
                       <button
                         type="button"
                         onClick={() => onOpenPromotion(msg.parsedData || undefined)}
-                        className="inline-flex items-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-2.5 text-xs font-bold text-amber-300 transition hover:bg-amber-500/20 active:scale-95"
+                        className="inline-flex items-center gap-2 rounded-xl border border-[#D5DFDA] bg-white px-4 py-2.5 text-xs font-bold text-[#1F3A33] transition hover:bg-[#EAF0ED] active:scale-95"
                       >
                         <Rocket className="h-4 w-4" />
                         <span>Перейти к Креативам и Воронке продаж</span>
@@ -645,7 +643,7 @@ export default function AiChatClient({
               )}
             </div>
 
-            <span className="mt-1 text-[10px] text-zinc-500 px-1">
+            <span className="mt-1 text-[10px] text-[#7A827E] px-1">
               {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </span>
           </div>
@@ -653,10 +651,10 @@ export default function AiChatClient({
 
         {loading && (
           <div className="flex flex-col items-start">
-            <div className="rounded-2xl border border-amber-500/30 bg-[#13131b] p-4 shadow-lg">
+            <div className="rounded-2xl border border-[#E2DDD3] bg-white p-4 nordic-shadow">
               <div className="flex items-center gap-3">
-                <Loader2 className="h-4 w-4 animate-spin text-amber-400" />
-                <span className="text-xs font-bold text-amber-300">
+                <Loader2 className="h-4 w-4 animate-spin text-[#1F3A33]" />
+                <span className="text-xs font-bold text-[#1F3A33]">
                   ИИ-Директора рассчитывают юнит-экономику, медиаплан и графики...
                 </span>
               </div>
@@ -668,7 +666,7 @@ export default function AiChatClient({
       </div>
 
       {/* Поле ввода запроса */}
-      <div className="rounded-2xl border border-amber-500/30 bg-[#111118] p-2 shadow-xl">
+      <div className="rounded-2xl border border-[#E2DDD3] bg-white p-2 nordic-shadow">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -682,12 +680,12 @@ export default function AiChatClient({
             onChange={(e) => setInput(e.target.value)}
             placeholder="Опишите ваш бизнес или вопрос (например: Хочу открыть кофейню в Астане, бюджет 4 млн ₸, как продвигать?)..."
             disabled={loading}
-            className="flex-1 rounded-xl bg-transparent px-3.5 py-2.5 text-sm text-white outline-none placeholder:text-zinc-500"
+            className="flex-1 rounded-xl bg-transparent px-3.5 py-2.5 text-sm text-[#1C242B] outline-none placeholder:text-[#7A827E]"
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="flex h-11 px-5 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-xs font-extrabold text-black shadow-lg shadow-amber-500/20 transition hover:brightness-110 active:scale-95 disabled:opacity-40"
+            className="flex h-11 px-5 items-center justify-center gap-2 rounded-xl bg-[#1F3A33] text-xs font-extrabold text-white shadow-sm transition hover:bg-[#162B25] active:scale-95 disabled:opacity-40"
           >
             {loading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -703,21 +701,21 @@ export default function AiChatClient({
 
       {/* Модальное окно настройки внешнего API-ключа */}
       {isKeyModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-3xl border border-amber-500/30 bg-[#12121a] p-6 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C242B]/50 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-3xl border border-[#E2DDD3] bg-white p-6 nordic-shadow">
+            <div className="flex items-center justify-between border-b border-[#ECE9E2] pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/15 text-amber-400">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#EAF0ED] text-[#1F3A33]">
                   <Key className="h-4 w-4" />
                 </span>
-                <h3 className="text-sm font-bold text-white">
-                  Настройки ИИ-ядра (Groq / Sovereign AI)
+                <h3 className="text-sm font-bold text-[#1C242B]">
+                  Настройки ИИ-ядра (Groq / Nordic AI)
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsKeyModalOpen(false)}
-                className="text-zinc-400 hover:text-white"
+                className="text-[#7A827E] hover:text-[#1C242B]"
               >
                 ✕
               </button>
@@ -725,7 +723,7 @@ export default function AiChatClient({
 
             <div className="mt-4 space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-zinc-300 mb-1">
+                <label className="block font-semibold text-[#1C242B] mb-1">
                   Groq Cloud API Key (опционально)
                 </label>
                 <input
@@ -733,15 +731,15 @@ export default function AiChatClient({
                   placeholder="gsk_..."
                   value={groqKey}
                   onChange={(e) => setGroqKey(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-black/50 px-3 py-2 text-xs font-mono text-white outline-none focus:border-amber-400"
+                  className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 text-xs font-mono text-[#1C242B] outline-none focus:border-[#1F3A33]"
                 />
-                <p className="mt-1.5 text-[11px] text-zinc-400">
+                <p className="mt-1.5 text-[11px] text-[#5C6460]">
                   Ключ можно получить бесплатно на{" "}
                   <a
                     href="https://console.groq.com/keys"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-0.5 text-amber-400 font-semibold hover:underline"
+                    className="inline-flex items-center gap-0.5 text-[#1F3A33] font-semibold hover:underline"
                   >
                     console.groq.com
                     <ExternalLink className="h-2.5 w-2.5" />
@@ -750,17 +748,17 @@ export default function AiChatClient({
               </div>
 
               <div>
-                <label className="block font-semibold text-zinc-300 mb-1">
+                <label className="block font-semibold text-[#1C242B] mb-1">
                   Выбор языковой модели
                 </label>
                 <select
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-[#181822] px-3 py-2 text-xs font-medium text-white outline-none focus:border-amber-400"
+                  className="w-full rounded-xl border border-[#D8D2C5] bg-[#FBF9F5] px-3 py-2 text-xs font-medium text-[#1C242B] outline-none focus:border-[#1F3A33]"
                 >
                   <option value="openai/gpt-oss-120b">GPT-OSS 120B (Максимальный интеллект)</option>
                   <option value="llama-3.3-70b-versatile">Llama 3.3 70B Versatile</option>
-                  <option value="free-ai">Встроенный движок AdForecast Sovereign 3.0</option>
+                  <option value="free-ai">Встроенный движок AdForecast Nordic 3.0</option>
                 </select>
               </div>
 
@@ -768,14 +766,14 @@ export default function AiChatClient({
                 <button
                   type="button"
                   onClick={() => handleSaveKey("", "free-ai")}
-                  className="rounded-xl border border-white/15 px-3 py-2 font-semibold text-zinc-300 hover:bg-white/5"
+                  className="rounded-xl border border-[#D8D2C5] px-3 py-2 font-semibold text-[#5C6460] hover:bg-[#F2EFE9]"
                 >
                   Автономный режим
                 </button>
                 <button
                   type="button"
                   onClick={() => handleSaveKey(groqKey, selectedModel)}
-                  className="rounded-xl bg-gradient-to-r from-amber-400 to-yellow-600 px-4 py-2 font-bold text-black"
+                  className="rounded-xl bg-[#1F3A33] px-4 py-2 font-bold text-white hover:bg-[#162B25]"
                 >
                   Сохранить
                 </button>

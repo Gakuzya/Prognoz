@@ -1,58 +1,53 @@
 @import "tailwindcss";
 
 :root {
-  --background: #070709;
-  --foreground: #f5f5f7;
-  --gold-primary: #d4af37;
-  --gold-light: #fde68a;
-  --gold-dark: #b48608;
+  --background: #F7F6F2;
+  --foreground: #1C242B;
+  --nordic-pine: #1F3A33;
+  --nordic-sage: #4A6B5D;
+  --nordic-sand: #ECE9E2;
+  --nordic-border: #E2DDD3;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background-color: #070709;
-  color: #f5f5f7;
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  background-color: #F7F6F2;
+  color: #1C242B;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   overflow-x: hidden;
 }
 
-/* Кастомный черно-золотой скроллбар */
+/* Элегантный скандинавский скроллбар (теплый камень и хвоя) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0b0f;
+  background: #F1EFEA;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #b48608 0%, #785506 100%);
+  background: #C8C2B6;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #f59e0b 0%, #b48608 100%);
+  background: #1F3A33;
 }
 
-/* Фоновая золотая сетка для премиального стиля */
-.bg-gold-grid {
-  background-size: 40px 40px;
+/* Тонкий текстурный паттерн в стиле северного минимализма */
+.bg-nordic-grid {
+  background-size: 48px 48px;
   background-image: 
-    linear-gradient(to right, rgba(212, 175, 55, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(28, 36, 43, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(28, 36, 43, 0.035) 1px, transparent 1px);
 }
 
-.gold-glow {
-  box-shadow: 0 0 35px -5px rgba(245, 158, 11, 0.22);
-}
-
-.gold-border-gradient {
-  border-color: rgba(245, 158, 11, 0.28);
+.nordic-shadow {
+  box-shadow: 0 10px 35px -10px rgba(28, 36, 43, 0.07), 0 2px 8px -2px rgba(28, 36, 43, 0.04);
 }
