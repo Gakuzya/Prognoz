@@ -73,11 +73,10 @@ export default function LoginPage() {
                 key={m}
                 type="button"
                 onClick={() => setMode(m)}
-                className={`rounded-lg py-2 transition ${
-                  mode === m
-                    ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-sm"
-                    : "text-zinc-400 hover:text-white"
-                }`}
+                className={`rounded-lg py-2 transition ${mode === m
+                  ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-sm"
+                  : "text-zinc-400 hover:text-white"
+                  }`}
               >
                 {m === "login" ? "Вход в аккаунт" : "Регистрация"}
               </button>

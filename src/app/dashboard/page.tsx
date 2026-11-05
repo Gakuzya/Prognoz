@@ -63,10 +63,10 @@ export default async function DashboardPage({
     rawTab === "simulator"
       ? "simulator"
       : rawTab === "promotion"
-      ? "promotion"
-      : rawTab === "report"
-      ? "report"
-      : "chat";
+        ? "promotion"
+        : rawTab === "report"
+          ? "report"
+          : "chat";
 
   return (
     <DashboardHub
