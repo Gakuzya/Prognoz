@@ -81,12 +81,12 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
   const activeAllocations = currentScenarioData?.allocations ?? data.allocations;
   const activeTotals = currentScenarioData
     ? {
-        leads: data.totals.leads,
-        sales: currentScenarioData.expectedSales,
-        revenue: currentScenarioData.expectedRevenue,
-        profit: currentScenarioData.expectedProfit,
-        roi: currentScenarioData.predictedRoi,
-      }
+      leads: data.totals.leads,
+      sales: currentScenarioData.expectedSales,
+      revenue: currentScenarioData.expectedRevenue,
+      profit: currentScenarioData.expectedProfit,
+      roi: currentScenarioData.predictedRoi,
+    }
     : data.totals;
 
   const handleDownloadPdf = async () => {
@@ -200,11 +200,10 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
           <button
             type="button"
             onClick={() => setActiveTab("overview")}
-            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${
-              activeTab === "overview"
-                ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
-                : "hover:text-amber-300"
-            }`}
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${activeTab === "overview"
+              ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
+              : "hover:text-amber-300"
+              }`}
           >
             <Sliders className="h-3.5 w-3.5" />
             <span>Медиамикс & Радар (3 графика)</span>
@@ -213,11 +212,10 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
           <button
             type="button"
             onClick={() => setActiveTab("funnel_cashflow")}
-            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${
-              activeTab === "funnel_cashflow"
-                ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
-                : "hover:text-amber-300"
-            }`}
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${activeTab === "funnel_cashflow"
+              ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
+              : "hover:text-amber-300"
+              }`}
           >
             <Filter className="h-3.5 w-3.5" />
             <span>Воронка & Окупаемость 6 мес.</span>
@@ -226,11 +224,10 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
           <button
             type="button"
             onClick={() => setActiveTab("scenarios")}
-            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${
-              activeTab === "scenarios"
-                ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
-                : "hover:text-amber-300"
-            }`}
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${activeTab === "scenarios"
+              ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
+              : "hover:text-amber-300"
+              }`}
           >
             <Target className="h-3.5 w-3.5" />
             <span>Сценарии (What-If)</span>
@@ -239,11 +236,10 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
           <button
             type="button"
             onClick={() => setActiveTab("curves")}
-            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${
-              activeTab === "curves"
-                ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
-                : "hover:text-amber-300"
-            }`}
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${activeTab === "curves"
+              ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
+              : "hover:text-amber-300"
+              }`}
           >
             <Activity className="h-3.5 w-3.5" />
             <span>Кривые насыщения</span>
@@ -252,11 +248,10 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
           <button
             type="button"
             onClick={() => setActiveTab("flightplan")}
-            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${
-              activeTab === "flightplan"
-                ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
-                : "hover:text-amber-300"
-            }`}
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 transition-all ${activeTab === "flightplan"
+              ? "bg-gradient-to-r from-amber-500 to-yellow-600 font-bold text-black shadow-md shadow-amber-500/20"
+              : "hover:text-amber-300"
+              }`}
           >
             <Calendar className="h-3.5 w-3.5" />
             <span>План по неделям</span>
@@ -298,11 +293,10 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
             <button
               type="button"
               onClick={() => setSelectedScenario("conservative")}
-              className={`flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
-                selectedScenario === "conservative"
-                  ? "bg-emerald-500 text-black font-bold shadow-md shadow-emerald-500/20"
-                  : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40"
-              }`}
+              className={`flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${selectedScenario === "conservative"
+                ? "bg-emerald-500 text-black font-bold shadow-md shadow-emerald-500/20"
+                : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40"
+                }`}
             >
               <ShieldCheck className="h-3.5 w-3.5" />
               Консервативный
@@ -311,11 +305,10 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
             <button
               type="button"
               onClick={() => setSelectedScenario("balanced")}
-              className={`flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
-                selectedScenario === "balanced"
-                  ? "bg-gradient-to-r from-amber-400 to-amber-600 text-black font-bold shadow-md shadow-amber-500/20"
-                  : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40"
-              }`}
+              className={`flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${selectedScenario === "balanced"
+                ? "bg-gradient-to-r from-amber-400 to-amber-600 text-black font-bold shadow-md shadow-amber-500/20"
+                : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40"
+                }`}
             >
               <Target className="h-3.5 w-3.5" />
               Сбалансированный
@@ -324,11 +317,10 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
             <button
               type="button"
               onClick={() => setSelectedScenario("aggressive")}
-              className={`flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
-                selectedScenario === "aggressive"
-                  ? "bg-purple-500 text-white font-bold shadow-md shadow-purple-500/20"
-                  : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40"
-              }`}
+              className={`flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${selectedScenario === "aggressive"
+                ? "bg-purple-500 text-white font-bold shadow-md shadow-purple-500/20"
+                : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40"
+                }`}
             >
               <Zap className="h-3.5 w-3.5" />
               Агрессивный
@@ -856,9 +848,8 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
                           +{formatMoney(m.profit, currency)}
                         </td>
                         <td
-                          className={`px-4 py-3 text-right font-bold ${
-                            m.cumulativeCashflow >= 0 ? "text-emerald-400" : "text-amber-400"
-                          }`}
+                          className={`px-4 py-3 text-right font-bold ${m.cumulativeCashflow >= 0 ? "text-emerald-400" : "text-amber-400"
+                            }`}
                         >
                           {formatMoney(m.cumulativeCashflow, currency)}
                         </td>
@@ -883,11 +874,10 @@ export default function ResultsView({ data, currency = "KZT" }: ResultsViewProps
                   <div
                     key={scKey}
                     onClick={() => setSelectedScenario(scKey)}
-                    className={`cursor-pointer rounded-2xl border p-5 transition-all ${
-                      isSelected
-                        ? "border-amber-400 bg-gradient-to-b from-amber-500/15 to-[#121218] shadow-lg shadow-amber-500/10"
-                        : "border-white/10 bg-[#121218] hover:border-amber-500/40"
-                    }`}
+                    className={`cursor-pointer rounded-2xl border p-5 transition-all ${isSelected
+                      ? "border-amber-400 bg-gradient-to-b from-amber-500/15 to-[#121218] shadow-lg shadow-amber-500/10"
+                      : "border-white/10 bg-[#121218] hover:border-amber-500/40"
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/15 text-amber-400">

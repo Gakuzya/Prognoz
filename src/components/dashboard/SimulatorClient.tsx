@@ -97,10 +97,10 @@ export default function SimulatorClient({
     externalParams?.channels && externalParams.channels.length > 0
       ? externalParams.channels
       : initialSphere.channels.map((c) => ({
-          name: c.name,
-          historicalCac: c.cac,
-          conversionRate: c.cr,
-        }))
+        name: c.name,
+        historicalCac: c.cac,
+        conversionRate: c.cr,
+      }))
   );
 
   const [loading, setLoading] = useState(false);
@@ -237,7 +237,7 @@ export default function SimulatorClient({
             1,
             Math.round(
               Math.round(Number(totalBudget) / optimizedChannels.length) /
-                Number(c.historicalCac)
+              Number(c.historicalCac)
             )
           ),
         })),
@@ -359,11 +359,10 @@ export default function SimulatorClient({
             <button
               type="button"
               onClick={() => setMode("simple")}
-              className={`flex items-center justify-center gap-1.5 rounded-lg py-2 transition-all ${
-                mode === "simple"
-                  ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
-                  : "text-zinc-400 hover:text-white"
-              }`}
+              className={`flex items-center justify-center gap-1.5 rounded-lg py-2 transition-all ${mode === "simple"
+                ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
+                : "text-zinc-400 hover:text-white"
+                }`}
             >
               <Zap className="h-3.5 w-3.5" />
               По сфере бизнеса
@@ -372,11 +371,10 @@ export default function SimulatorClient({
             <button
               type="button"
               onClick={() => setMode("pro")}
-              className={`flex items-center justify-center gap-1.5 rounded-lg py-2 transition-all ${
-                mode === "pro"
-                  ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
-                  : "text-zinc-400 hover:text-white"
-              }`}
+              className={`flex items-center justify-center gap-1.5 rounded-lg py-2 transition-all ${mode === "pro"
+                ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
+                : "text-zinc-400 hover:text-white"
+                }`}
             >
               <Sliders className="h-3.5 w-3.5" />
               PRO-настройка

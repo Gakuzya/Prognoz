@@ -191,15 +191,15 @@ export default function DashboardHub({
     const channels =
       planData.channelAllocations && planData.channelAllocations.length > 0
         ? planData.channelAllocations.map((c) => ({
-            name: c.channel,
-            historicalCac: c.estimatedCac,
-            conversionRate: 3.2,
-          }))
+          name: c.channel,
+          historicalCac: c.estimatedCac,
+          conversionRate: 3.2,
+        }))
         : generatedResult.allocations.map((a) => ({
-            name: a.channel,
-            historicalCac: a.effectiveCac || 7500,
-            conversionRate: 3.2,
-          }));
+          name: a.channel,
+          historicalCac: a.effectiveCac || 7500,
+          conversionRate: 3.2,
+        }));
 
     const newProject: ActiveProjectState = {
       industry: generatedResult.industry || planData.industry || project.industry,
@@ -401,11 +401,10 @@ export default function DashboardHub({
           <button
             type="button"
             onClick={() => setActiveTab("chat")}
-            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${
-              activeTab === "chat"
-                ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
-                : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
-            }`}
+            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${activeTab === "chat"
+              ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
+              : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
+              }`}
           >
             <Bot className="h-4 w-4 shrink-0" />
             <span>1. ИИ-Штаб (5 Агентов)</span>
@@ -414,11 +413,10 @@ export default function DashboardHub({
           <button
             type="button"
             onClick={() => setActiveTab("simulator")}
-            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${
-              activeTab === "simulator"
-                ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
-                : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
-            }`}
+            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${activeTab === "simulator"
+              ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
+              : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
+              }`}
           >
             <BarChart3 className="h-4 w-4 shrink-0" />
             <span>2. Симулятор & 6 Графиков</span>
@@ -427,11 +425,10 @@ export default function DashboardHub({
           <button
             type="button"
             onClick={() => setActiveTab("promotion")}
-            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${
-              activeTab === "promotion"
-                ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
-                : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
-            }`}
+            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${activeTab === "promotion"
+              ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
+              : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
+              }`}
           >
             <Rocket className="h-4 w-4 shrink-0" />
             <span>3. Продвижение & Креативы</span>
@@ -440,11 +437,10 @@ export default function DashboardHub({
           <button
             type="button"
             onClick={() => setActiveTab("report")}
-            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${
-              activeTab === "report"
-                ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
-                : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
-            }`}
+            className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-xs font-extrabold transition-all ${activeTab === "report"
+              ? "bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 text-black shadow-lg shadow-amber-500/25"
+              : "border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-white"
+              }`}
           >
             <FileText className="h-4 w-4 shrink-0" />
             <span>4. Инвест-Отчёт & PDF</span>

@@ -61,11 +61,10 @@ export default function OnboardingPage() {
           <button
             type="button"
             onClick={() => setMode("plan")}
-            className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-extrabold transition-all ${
-              mode === "plan"
-                ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
-                : "text-zinc-400 hover:text-white"
-            }`}
+            className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-extrabold transition-all ${mode === "plan"
+              ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
+              : "text-zinc-400 hover:text-white"
+              }`}
           >
             <Bot className="h-4 w-4" />
             <span>Только планирую</span>
@@ -74,11 +73,10 @@ export default function OnboardingPage() {
           <button
             type="button"
             onClick={() => setMode("existing")}
-            className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-extrabold transition-all ${
-              mode === "existing"
-                ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
-                : "text-zinc-400 hover:text-white"
-            }`}
+            className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-extrabold transition-all ${mode === "existing"
+              ? "bg-gradient-to-r from-amber-400 to-yellow-600 text-black shadow-md"
+              : "text-zinc-400 hover:text-white"
+              }`}
           >
             <Building2 className="h-4 w-4" />
             <span>Действующий бизнес</span>
